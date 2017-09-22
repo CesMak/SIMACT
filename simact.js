@@ -8,67 +8,164 @@
  * 2. no console.log arguments!
  * 3. Tests Jasmine
  * 4. Remember to exports new function at the end of this document!
+ * 
+ * Algebrite:
+ * Algebrite.dot(firstarg is not allowed to be a singular matrix!!!, ...) 
  */
   
 var Algebrite = require('./algebrite');
 
-function addPP(a){
-	//console.log(Algebrite.tan("0.2").toString()); // 0.20271
-return Algebrite.tan(a);
-};
+
+/**
+ * Get the Columns of a Matrix
+ * @param {string} Matrix - [[12,87]]
+ * @return{int} columns of Matrix - 2
+ */
+function getColumnsM(matrix){
+	var size = (new Function("return " + Algebrite.shape(matrix).toString()+ ";")());
+	return size[1];
+}
+
+/**
+ * Get the Rows of a Matrix
+ * @param {string} Matrix - [[12,87]]
+ * @return{int} rows of Matrix - 1
+ */
+function getRowsM(matrix){
+	var size = (new Function("return " + Algebrite.shape(matrix).toString()+ ";")());
+	return size[0];
+}
 
 
 /**
- * TODO: Check real part and add for z Sys
+ * Get a Column Vector of a Matrix
+ * @param {string} matrixasString - [[1,23],[12,34],[1,2],[1.3,1.6]]
+ * @param {int} columnsofMatrix? - 2 
+ * @param {int} pos - 1 (get second column!)
+ * @return{string} standing vector - [[23],[34],[2],[1.6]]
+ */
+function getColumnVectorOfMatrix(matrixasString,columnsofMatrix,pos){
+	var a = "["; // ligender Vektor!
+    for(var i=0;i<columnsofMatrix;i++){
+        if(i!=columnsofMatrix-1){
+        if(i!=pos){
+              a=a+"0,";
+          }
+          if(i==pos){
+              a=a+"1,";
+          }
+        }
+        else{
+            if(i!=pos){
+                  a=a+"0";
+              }
+              if(i==pos){
+                  a=a+"1";
+              }
+        }
+    }
+    a=a+"]"
+     //console.log(a); // immer liegend! 
+    var liegend ="["+ Algebrite.dot(a,Algebrite.transpose(matrixasString)).toString() +"]";  // <- ist ein liegender vektor!
+    return Algebrite.transpose(liegend).toString();
+}
+
+/**
+ * Get a Row Vector of a Matrix
+ * @param {string} matrixasString - [[1,23],[12,34],[1,2],[1.3,1.6]]
+ * @param {int} rows - 4 
+ * @param {int} pos - 1 (get second row!)
+ * @return{string} lying vector - [[12,34]]
+ */ 
+function getRowVectorOfMatrix(matrixasString,rowsofMatrix,pos){
+    var a = "["; // ligender Vektor!
+    for(var i=0;i<rowsofMatrix;i++){
+        if(i!=rowsofMatrix-1){
+        if(i!=pos){
+              a=a+"0,";
+          }
+          if(i==pos){
+              a=a+"1,";
+          }
+        }
+        else{
+            if(i!=pos){
+                  a=a+"0";
+              }
+              if(i==pos){
+                  a=a+"1";
+              }
+        }
+    }
+    a=a+"]"
+   //console.log(a); // immer liegend!
+   return "["+Algebrite.dot(a,matrixasString).toString()+"]";
+}
+
+/**
+ * TODO: add imaginary and stop!
  * Prints out if the System is stable or not.
  * @param {array} Eigenvalues - [-0.464102,6.4641]
  * @param {string} system - 's' or 'z' s for continuous z for discrete
  * @return {string} stable or unstable
  */
 function check_stability(eigenvalues,system){
-    var a = 0;
     if(system.toString()=='s'){
     for(var i=0;i<eigenvalues.length;i++){
         //console.log(eigenvalues[i]);
         if(eigenvalues[i]>0){
-            a=1;
+            return "unstable";
         }
     }
-    if(a==1){
-        //console.log("s-System is unstable");
-        return "unstable";
+    return "stable";
     }
-    if(a==0){
-        //console.log("s-System is stable");
-        return "stable";
+    else if(system.toString()=='z'){
+        for(var i=0;i<eigenvalues.length;i++){
+            if(Math.abs(eigenvalues[i])>=1){
+                return "unstable";
+            }
+        }
+    	return "stable";
     }
+    else{
+    	//stop("System must be 's' or 'z'! ");
     }
 }
 
-// all matrices as speicher=Algebrite.run('Q_S=unit('+nA+','+nA+')'); values!
+/**
+ * Calculates the controllability matrix: Q_S=[B,AB,A^n-1B] 
+ * @param {string} Matrix A - [[1,2],[1,2]]
+ * @param {string} Matrix B - [[1],[2]]
+ * @param {int} nA_fest - let empty
+ * @param {??} speicher - let empty
+ * @return {string} Matrix  - Q_S 
+ */
 function getQ_S(A,B,nA,nA_fest,speicher){
-    if(typeof nA=='undefined'){
-        var sizeA = (new Function("return " + Algebrite.shape('A')+ ";")());
-        var speicher=Algebrite.run('Q_S=unit('+sizeA[0]+','+sizeA[0]+')');
+	//console.log(Algebrite.run('Q_S=unit('+2+','+2+')'));
+	if(typeof nA=='undefined'){
+        var cols = getColumnsM(A);
+        var speicher=Algebrite.run('Q_S=unit('+cols+','+cols+')');
         speicher=Algebrite.eval('Q_S').toString();
-        // console.log(Algebrite.eval('Q_S').toString());
-      return  getQ_S(A,B,sizeA[0],sizeA[0],speicher);
+       //console.log(Algebrite.eval('Q_S').toString());
+      return  getQ_S(A,B,cols,cols,speicher);
     }
     else{
     var pos = nA_fest-nA;
     if(nA>0){
-       // console.log(pos);
+      // console.log(pos);
         if(pos==0){
             speicher=setColumnVectorOfMatrix(speicher,0,B);
-            // console.log(speicher);
+            //console.log(speicher);
             return getQ_S(A,B,nA-1,nA_fest,speicher);
         }
         else{
-
-            var newcolumn = Algebrite.dot(A,getColumnVectorOfMatrix(speicher,nA_fest,pos-1)).toString();
-          // console.log(newcolumn);
+        	var bb = getColumnVectorOfMatrix(speicher,nA_fest,pos-1).toString();
+        	//console.log(Algebrite.transpose(bb).toString());
+        	//console.log(Algebrite.transpose(A).toString());
+            var newcolumn = Algebrite.dot(Algebrite.transpose(bb).toString(),Algebrite.transpose(A).toString()).toString();
+           // console.log(newcolumn);
             speicher=setColumnVectorOfMatrix(speicher,pos,newcolumn);
-          // console.log(speicher);
+           // console.log(speicher);
             return getQ_S(A,B,nA-1,nA_fest,speicher);
         }
     }
@@ -106,57 +203,7 @@ function getQ_B(A,C,nA,nA_fest,speicher){
         return speicher;
 }
 
-// size of Matrix is n or m?
-function getColumnVectorOfMatrix(matrixasString,sizeofMatrix,pos){
-    var a = "["; // ligender Vektor!
-    for(var i=0;i<sizeofMatrix;i++){
-        if(i!=sizeofMatrix-1){
-        if(i!=pos){
-              a=a+"0,";
-          }
-          if(i==pos){
-              a=a+"1,";
-          }
-        }
-        else{
-            if(i!=pos){
-                  a=a+"0";
-              }
-              if(i==pos){
-                  a=a+"1";
-              }
-        }
-    }
-    a=a+"]"
-// console.log(a); // immer liegend!
-   // console.log(matrixasString);
-   return Algebrite.dot(a,Algebrite.transpose(matrixasString));
-}
 
-function getRowVectorOfMatrix(matrixasString,sizeofMatrix,pos){
-    var a = "["; // ligender Vektor!
-    for(var i=0;i<sizeofMatrix;i++){
-        if(i!=sizeofMatrix-1){
-        if(i!=pos){
-              a=a+"0,";
-          }
-          if(i==pos){
-              a=a+"1,";
-          }
-        }
-        else{
-            if(i!=pos){
-                  a=a+"0";
-              }
-              if(i==pos){
-                  a=a+"1";
-              }
-        }
-    }
-    a=a+"]"
-  // console.log(a); // immer liegend!
-   return Algebrite.dot(a,matrixasString);
-}
 
 // matrix: "[[1,0,0],[0,1,0],[0,0,1]]"
 // returns: string representation!
@@ -923,248 +970,14 @@ function main(){
 }
 
 
-
-// Highcharts Stuff:
-// 1. Draw block schlaltbilder: (not used)
-
-// Rendering: Blockschaltbild rechts:
-// Infos: http://api.highcharts.com/highcharts/Renderer.image
-// http://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/members/renderer-rect/
-// http://jsfiddle.net/Sly_cardinal/jm9moswu/1/
-
-// $(function () {
-// var renderer = new Highcharts.Renderer(
-// $('#block-diagramm')[0],
-// 600,
-// 150);
-// addFigures2(renderer);
-// });
-
-function addFigures2(renderer) {
-
-    // addArrow(renderer);
-    rectangle(renderer, 5, 5, 590, 140);
-    var rect1 = addRect_and_Text(renderer, 250, 50, 2, "white", 1, "1/s * I", "15px");
-    var rect2 = addRect_and_Text(renderer, 350, 50, 2, "white", 1, "C", "15px");
-    connect2Rects(renderer, rect1, rect2, "x(t)");
-
-    var circle = addCircle(renderer, 100, 38, 10, "+-");
-    connect2Rects(renderer, circle, rect1, "x_dot(t)");
-
-    connectCircleRect(renderer, circle, rect1, "y(t)");
-}
-
-function addFigures(renderer) {
-
-    // addArrow(renderer);
-    rectangle(renderer, 5, 5, 590, 140);
-    var rect1 = addRect_and_Text(renderer, 200, 50, 2, "white", 1, "Regler", "15px");
-    var rect2 = addRect_and_Text(renderer, 350, 50, 2, "white", 1, "Strecke", "15px");
-    connect2Rects(renderer, rect1, rect2, "u(t)");
-
-    var circle = addCircle(renderer, 100, 38, 10, "+-");
-    connect2Rects(renderer, circle, rect1, "e(t)");
-
-    connectCircleRect(renderer, circle, rect2, "y(t)");
-}
-
-function addRect_and_Text(renderer, posx, posy, cornerRadius, fillcolor, strokewidth, name, textsize) {
-    // Adde Rechteck das mind. so lange ist wie der Name der drinnen stehen
-	// soll!
-    // width height wird automatisch angepasst!
-
-    var texttt = renderer.text(name, posx, posy)
-        .css({
-            fontSize: textsize
-        })
-        .attr({
-            zIndex: 2
-        }).add(),
-    box = texttt.getBBox();
-
-    var rect = renderer.rect(box.x - 5, box.y - 5, box.width + 10, box.height + 10, cornerRadius) // rect
-																									// (Number
-																									// x,
-																									// Number
-																									// y,
-																									// Number
-																									// width,
-																									// Number
-																									// height,
-																									// Number
-																									// cornerRadius)
-        .attr({
-            'stroke-width': strokewidth,
-            stroke: 'black',
-            fill: fillcolor,
-            zIndex: 1
-        })
-        .add();
-    return rect;
-}
-
-function connectCircleRect(renderer, circle, rect, name) {
-    var x1 = circle.getBBox().x;
-    var y1 = circle.getBBox().y;
-    var height1 = circle.getBBox().height;
-    var width1 = circle.getBBox().width;
-    var x2 = rect.getBBox().x;
-    var y2 = rect.getBBox().y;
-    var height2 = rect.getBBox().height;
-    var width2 = rect.getBBox().width;
-
-    // arrow von unten nach oben:
-    addArrowUp(renderer, x1, y1 + 15, 80, 10);
-    addText(renderer, x1 + 15, y1 + 60, "y(t)", "15px");
-
-    addArrowRight(renderer, x2 + width2 - 10, y2 + height2 / 2 - 10, 150, 10);
-    addText(renderer, x2 + width2 + 80, y2 + height2 / 2 - 5, "y(t)", "15px");
-
-    // add Path:
-    renderer.path([
-            // Line: -----
-            'M', x1 + 10, y1 + 15 + 70, x2 + width2 + 50, y1 + 15 + 70,
-            'M', x2 + width2 + 50, y1 + 15 + 70, x2 + width2 + 50, y2 + height2 / 2,
-        ])
-    .attr({
-        fill: 'black',
-        'stroke-width': 1,
-        stroke: 'black',
-        zIndex: 13,
-    })
-    .add();
-}
-
-function connect2Rects(renderer, rect1, rect2, name) {
-    // connecte beide rects mit Pfeil von rect1->rect2
-    // und schreibe einen Namen auf den Pfeil
-
-    // vorgehen: wenn y wert gleich ist dann einfach pfeil von rect1 nach rect2
-    var x1 = rect1.getBBox().x;
-    var y1 = rect1.getBBox().y;
-    var height1 = rect1.getBBox().height;
-    var width1 = rect1.getBBox().width;
-    var x2 = rect2.getBBox().x;
-    var y2 = rect2.getBBox().y;
-    console.log(x1 + " " + y1 + " " + height1 + " " + width1 + "  Rechteck " + x2 + " " + y2);
-
-    addArrowRight(renderer, x1 - 10 + width1, y1 - 10 + height1 / 2, x2 - (x1 - 8 + width1), 10);
-    addText(renderer, x1 - 10 + width1 + (x2 - (x1 - 8 + width1)) / 2, y1 - 5 + height1 / 2, name, "15px");
-}
-
-function addText(renderer, posx, posy, name, textsize) {
-    renderer.text(name, posx, posy)
-    .css({
-        fontSize: textsize
-    })
-    .attr({
-        zIndex: 2
-    }).add();
-}
-
-function addCircle(renderer, posx, posy, radius, parameter) {
-    // (Number centerX, Number centerY, Number radius)
-    var circle = renderer.circle(posx, posy, radius)
-        .attr({
-            'stroke-width': 1,
-            stroke: 'black',
-            fill: 'white',
-            zIndex: 3 // das heißt die Form ist ganz unten!
-        })
-        .add(),
-    box = circle.getBBox();
-
-    if (parameter == "+-") {
-        addText(renderer, box.x - 25, box.y + 10, "+", "20px");
-        addText(renderer, box.x + 18, box.y + 30, "-", "20px");
-
-        addArrowRight(renderer, box.x - 80, box.y, 80, 8);
-        addText(renderer, box.x - 60, box.y + 5, "w(t)", "15px");
-    }
-
-    return circle;
-}
-
-function rectangle(renderer, posx, posy, width, height) {
-    renderer.rect(posx, posy, width, height, 1)
-    .attr({
-        'stroke-width': 3,
-        stroke: 'black',
-        fill: 'white',
-        zIndex: 0 // das heißt die Form ist ganz unten!
-    })
-    .add();
-}
-
-function addArrowUp(renderer, startx, starty, width, aw) {
-    // aw: länge der Pfeilspitze.
-    renderer.path([
-            //
-            // 'L',
-            // 0, 10,
-            // 10, 20,
-            // 'Z',
-
-            // Line: -----
-            'M', 10, width - aw, 10, 10, // linie von unten nach oben!
-
-            // up ^ arrow
-            'M', 15, 10,
-            10, 5,
-            5, 10,
-            'Z'
-        ])
-    .attr({
-        fill: 'black',
-        'stroke-width': 1,
-        stroke: 'black',
-        zIndex: 13,
-        transform: "translate(" + startx + "," + starty + ")" // hier STart
-																// position
-    })
-    .add();
-
-}
-
-function addArrowRight(renderer, startx, starty, width, aw) {
-    // aw: länge der Pfeilspitze.
-    renderer.path([
-            'M', 10, 0,
-
-            // Left arrow: <
-            // 'L',
-            // 0, 10,
-            // 10, 20,
-            // 'Z',
-
-            // Line: -----
-            'M', 10, 10,
-            'L',
-            width - aw, 10,
-
-            // Right arrow: >
-            'M', width - aw, 0,
-            width, 10,
-            width - aw, 20,
-            'Z'
-        ])
-    .attr({
-        fill: 'black',
-        'stroke-width': 1,
-        stroke: 'black',
-        zIndex: 3,
-        transform: "translate(" + startx + "," + starty + ")" // hier STart
-																// position
-    })
-    .add();
-}
-
-// end of library for drawing block-schaltbilder.
-
-
-
 module.exports = {
 Algebrite: Algebrite,
-addPP:addPP,
+
+getColumnsM: getColumnsM,
+getRowsM: getRowsM,
+getColumnVectorOfMatrix: getColumnVectorOfMatrix,
+getRowVectorOfMatrix: getRowVectorOfMatrix,
+check_stability: check_stability,
+getQ_S:getQ_S,
 }
 
