@@ -125,6 +125,12 @@ describe("Test:  getQ_B(A,C,nA,nA_fest,speicher)", function() {
 		expect(simact.getQ_B(AA,CC)).toBe("[[0,1,0],[1,1,1],[3,4,3]]");
 	});
 	
+	it("@return", function() {
+		var AA = "[[1,2],[4,5]]";
+		var CC = "[[1/2,0]]";
+		expect(simact.getQ_B(AA,CC)).toBe("[[0.5,0],[0.5,1]]");
+	});
+	
 });
 
 describe("Test:  getMatValue(matrix,i,j)", function() {
@@ -275,6 +281,10 @@ describe("Test:  arrayToString(array)", function() {
 		var array = [[2,1],[0,1]];
 		expect(simact.arrayToString(array)).toBe("[[2,1],[0,1]]");
 	});
+	it("@return", function() {
+		var array = [[1],[0]];
+		expect(simact.arrayToString(array)).toBe("[[1],[0]]");
+	});
 	
 });
 
@@ -314,6 +324,11 @@ describe("Test:  roundMatrix(matrix,factor)", function() {
 		expect(simact.roundMatrix(A,2)).toBe("[[0.34,-0.81],[0.94,0.59]]");
 	});
 	
+	it("@return", function() {
+		var A = "[[1],[0]]";
+		expect(simact.roundMatrix(A,2)).toBe("[[1],[0]]");
+	});
+
 });
 
 describe("Test:  roundArray(array,factor)", function() {
@@ -536,6 +551,36 @@ describe("Test:  checkHautusB(AasString,CasString)", function() {
 		var A = "[[1,2],[3,4]]";
 		var C = "[[1,0]]";
 		expect(simact.checkHautusB(A,C).toString()).toBe('[[-1 + s,-2],[-3,-4 + s],[1,0]]'); //string rep
+	});
+	
+	//TODO test for MIMO
+});	
+
+describe("Test:  calcSSys(A,B,C,D)", function() {
+
+	it("@return  all eigenvalues controllable!", function() {
+		var A = "[[1,2],[4,5]]";
+		var B ="[[0],[1]]"
+		var C = "[[1,0]]";
+		var result = simact.calcSSys(A,B,C);
+		expect(result['nA']).toBe(2);
+		
+		//Other results:
+//		[[1,2],[4,5]]: 2x2[[0],[1]]: 2x1[[1,0]]: 1x2
+//		Q_SK: [[0,2],[1,5]] Q_BK: [[1,0],[1,2]] rQ_SK:2 rQ_BK:2
+//		isKS: System is Kalman controllable. iQ_SK: [[-5/2,1],[1/2,0]] q_SK:[[1/2,0]]
+//		isBS: System is Kalman observable. iQ_BK: [[1,0],[-1/2,1/2]] q_BK:[[-1/2,1/2]]
+//		M_SH: [[-1 + s,-2,0],[-4,-5 + s,1]] hnc: none
+//		M_BH: [[-1 + s,-2],[-4,-5 + s],[1,0]] hno: none
+//		q_SK: [[1/2,0]] iT_SNF: [[0.5,0],[0.5,1]] T_SNF: [[2,0],[-1,1]]
+//		A_SNF: [[0,1],[3,6]] B_SNF: [[0],[1]] C_SNF: [[2,0]]
+//		q_BK: [[-1/2,1/2]] iT_BNF: [[-0.5,0.5],[0.5,0.5]] T_BNF: [[-1,1],[1,1]]
+//		A_BNF: [[0,3],[1,6]] B_BNF: [[0.5],[0.5]] C_BNF: [[-1,1]]
+//		T_JNF: [[0.3437,-0.8069],[0.9391,0.5907]] iT_JNF: [[0.6148,0.8398],[-0.9774,0.3577]]
+//		A_JNF: [[6.4639,0.0001],[-0.0003,-0.4641]] B_JNF: [[0.8398],[0.3577]] C_JNF: [[0.3437,-0.8069]]
+//		gnc: none gno: none
+//		charPoly: s^2 - 6 s - 3 inv_sIA: [[(-5 + s) / (-3 - 6 s + s^2),2 / (-3 - 6 s + s^2)],[4 / (-3 - 6 s + s^2),(-1 + s) / (-3 - 6 s + s^2)]] transo: [[2 / (-3 - 6 s + s^2)]]
+//		transoex: 0.2886/(s-(6.4639))-0.2886/(s-(-0.4641))
 	});
 	
 	//TODO test for MIMO
