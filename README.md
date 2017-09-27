@@ -1,4 +1,4 @@
-opy algebrite.js and simact.js into simact-lib folder
+1. Copy algebrite.js and simact.js into simact-lib folder
 
 2. npm install big-integer
 

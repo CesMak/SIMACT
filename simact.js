@@ -1,7 +1,8 @@
 /**
  * Control Theory Library of Markus Lamprecht
  * 
- * Depens on: Algebrite http://algebrite.org/
+ * Depens on: Algebrite http://algebrite.org/ (which depends on Big-Integer)
+ * 			  numeric (used to compute the SVD - kernel of a Matrix)
  * 
  * Rules:
  * 1. Use this Documentation style: http://usejsdoc.org/
@@ -12,8 +13,11 @@
  * Algebrite:
  * Algebrite.dot(firstarg is not allowed to be a singular matrix!!!, ...) 
  */
+
+//TODO: check number of input arguments in each function!
   
 var Algebrite = require('./algebrite');
+var numeric = require('./numeric');
 
 
 /**
@@ -34,6 +38,95 @@ function getColumnsM(matrix){
 function getRowsM(matrix){
 	var size = (new Function("return " + Algebrite.shape(matrix).toString()+ ";")());
 	return size[0];
+}
+
+/**
+* Set a value of a Matrix (matrix is only allowed to contain numbers)
+* @param {string} Matrix A - [[1,2],[3,4]] (is not allowed to contain symbols!)
+* @param {int} i row  - 1 (second value!)
+* @param {int} j column- 0
+* @param {double/int} value to set - 0.12398
+* @return {string} matrix - resulting Matrix "[[1,2],[0.12398,4]]"
+*/
+function setMatValue(matrix,i,j,value){
+ var matrixasarray = (new Function("return " +matrix+ ";")());
+ matrixasarray[i][j]=value;
+return arrayToString(matrixasarray);
+}
+
+/**
+* Set a value of a Matrix (Symbolic values in matrix are allowed!)
+* @param {string} Matrix A - "[[1,1,1],[2,2,2],[3,3,3]]"
+* @param {int} i row  - 0 (first value!)
+* @param {int} j column- 2 (third value)
+* @param {string} value to set - "s+6"
+* @return {string} matrix - resulting Matrix "[[1,1,s+6],[2,2,2],[3,3,3]]"
+*/
+function setMatValuesym(matrix,i,j,value){
+	var mA = getColumnsM(matrix);
+	var nA = getRowsM(matrix);
+	matrix = matrix.replace(/\[/g, '');
+	matrix = matrix.replace(/\]/g, '');
+	var array = matrix.split(",");
+	var x =(mA-1)*i;
+	var sumval = i+j+x;
+	//console.log(matrix)
+	//console.log(sumval);
+	
+	array[sumval]=value;
+	//console.log(array);
+	
+	var output = arrayToMatrixString(array.toString(),mA,nA);
+	//console.log(output);
+	return output;
+}
+
+/**
+* Converts a single Arry to a Matrix String
+* @param {String} String repr of a single Array - "1,1,2,2"
+* @param {int}  columns of the input matrix - 2
+* @param {int}  rows of the input matrix - 2
+* @return {string} matrix -"[[1,1],[2,2]]"
+*/
+function arrayToMatrixString(stringarray,maxColumns,maxRows){
+	var tmp = stringarray;
+	var res ="";
+	for(var p = maxColumns;p<(maxColumns*maxRows);p=p+maxColumns){
+		res = customReplace(tmp,',','],[',p);
+		tmp = res;
+	}
+	tmp = "[["+tmp+"]]"
+	return tmp;
+}
+
+/**
+* Replaces 
+* @param {string} str input data - "1,1,2,2"
+* @param {string} strTextToReplace - ","
+* @param {string} strReplaceWith - "],["
+* @param {int}    replaceAt -2
+* @return {string} replaced string -"1,1],[2,2"
+*/
+function customReplace(strData, strTextToReplace, strReplaceWith, replaceAt) {
+    var index = strData.indexOf(strTextToReplace);
+    for (var i = 1; i < replaceAt; i++)
+        index = strData.indexOf(strTextToReplace, index + 1);
+    if (index >= 0)
+        return strData.substr(0, index) + strReplaceWith + strData.substr(index + strTextToReplace.length, strData.length);
+    return strData;
+}
+
+
+/**
+* Get a value of a Matrix
+* @param {string} Matrix A - [[1,2],[3,4]]
+* @param {int} i row  - 1 (second value!)
+* @param {int} j column- 0
+* @return {int} value of Matrix at i,j - 3
+*/
+function getMatValue(matrix,i,j){
+ var matrixasarray = (new Function("return " +matrix+ ";")());
+return matrixasarray[i][j];
 }
 
 
@@ -101,6 +194,113 @@ function getRowVectorOfMatrix(matrixasString,rowsofMatrix,pos){
    //console.log(a); // immer liegend!
    return "["+Algebrite.dot(a,matrixasString).toString()+"]";
 }
+
+/**
+ * Set a column vector of matrix!
+ * TODO fails if input matrix contains symbols!
+ * @param {string} Matrix A - [[1,0],[0,1]]
+ * @param {int} column - 0
+ * @param {string} new column value - [2,1] or [[2],[1]] or [[2,1]]
+ * @return {string} new Matrix  - [[2,0],[1,1]]
+ */
+function setColumnVectorOfMatrix(matrix,column,columnvalue){
+  // handle column inputs like: [[2,1]]
+   // or [[2],[1]]
+    var columnvaluesize = (new Function("return " + Algebrite.shape(columnvalue)+ ";")()); // dimension
+    var ncolumnvaluesize= (columnvaluesize[0]);
+    if(ncolumnvaluesize!=1){ // e.g: [[2],[1]] ncolumnvaluesize=2
+        columnvalue=Algebrite.transpose(columnvalue).toString();
+       // console.log(columnvalue);
+    }
+    if(columnvalue[0]="["&&columnvalue[1]=="["){
+        columnvalue=columnvalue.substring(1);
+        columnvalue=columnvalue.substring(0,columnvalue.length-1);
+    }
+    // console.log(columnvalue);
+
+  // eigentliche logik:
+  var columnvaluesasarray =  (new Function("return " +columnvalue+ ";")());
+  // console.log(columnvaluesasarray);
+    var tmp = "";
+   for(var i=0;i<columnvaluesasarray.length;i=i+1){
+	//console.log("matrix: "+matrix+" i"+i+" column"+column+" "+columnvaluesasarray[i].toString())
+     tmp=setMatValuesym(matrix,i,column,columnvaluesasarray[i].toString());
+    // console.log(tmp);
+       matrix=tmp;
+    }
+   return matrix;
+}
+
+/**
+ * Set a Row vector of matrix!
+ * @param {string} Matrix A - [[1,0],[0,1]]
+ * @param {int} row - 0
+ * @param {string} new row value - [2,1] or [[2],[1]] or [[2,1]]
+ * @return {string} new Matrix  - [[2,0],[1,1]]
+ */
+function setRowVectorOfMatrix(matrix,row,rowvalue){
+    if(rowvalue[0]="["&&rowvalue[1]=="["){
+        rowvalue=rowvalue.substring(1);
+        rowvalue=rowvalue.substring(0,rowvalue.length-1);
+    }
+
+    var rowvaluesasarray =  (new Function("return " +rowvalue+ ";")());
+     // console.log(rowvaluesasarray);
+    var tmp = "";
+   for(var i=0;i<rowvaluesasarray.length;i=i+1){
+     tmp=setMatValuesym(matrix,row,i,rowvaluesasarray[i].toString());
+       matrix=tmp;
+    }
+   return matrix;
+}
+
+
+/**
+ * Check zero Rows of a Matrix
+ * @param {string} Matrix A - [[1,0,0],[2,0,0],[3,0,1]]
+ * @return {array} list which contains columns that contain only zero's  - [2] (second column is a zero column!)
+ */
+function checkzeroColumn(matrix){
+ var list=[];
+ var n = getRowsM(matrix);
+ var m = getColumnsM(matrix);
+ for(var j=0;j<m;j++){
+     var columnsum=0;
+     for(var i=0;i<n;i++){
+         columnsum=columnsum+getMatValue(matrix,i,j);
+     }
+    // console.log(columnsum);
+     if(columnsum==0){
+         var tmp=j+1
+         list.push(tmp);
+     }
+ }
+ return list;
+}
+
+/**
+ * Check zero Rows of a Matrix
+ * @param {string} Matrix A - [[0,0,0],[2,0,0],[3,0,1]]
+ * @return {array} list which contains rows that contain only zero's  - [1] (first row is a zero row!)
+ */
+function checkzeroRow(matrix,n,m){
+ var list=[];
+ var n = getRowsM(matrix);
+ var m = getColumnsM(matrix);
+ for(var j=0;j<m;j++){
+     var columnsum=0;
+     for(var i=0;i<n;i++){
+         columnsum=columnsum+getMatValue(matrix,j,i);
+     }
+    // console.log(columnsum);
+     if(columnsum==0){
+         var tmp=j+1;
+         list.push(tmp);
+     }
+ }
+ return list;
+}
+
 
 /**
  * TODO: add imaginary and stop!
@@ -173,27 +373,36 @@ function getQ_S(A,B,nA,nA_fest,speicher){
         return speicher;
 }
 
+
+/**
+ * Calculates the observability matrix: Q_B=[C CA CA^n-1] 
+ * @param {string} Matrix A - [[1,2],[1,2]]
+ * @param {string} Matrix C - [[1,2]]
+ * @param {int} nA_fest - let empty
+ * @param {??} speicher - let empty
+ * @return {string} Matrix  - Q_B
+ */
 function getQ_B(A,C,nA,nA_fest,speicher){
     if(typeof nA=='undefined'){
-        var sizeA = (new Function("return " + Algebrite.shape('A')+ ";")());
-        var speicher=Algebrite.run('Q_B=unit('+sizeA[0]+','+sizeA[0]+')');
+        var cols = getColumnsM(A);
+        var speicher=Algebrite.run('Q_B=unit('+cols+','+cols+')');
         speicher=Algebrite.eval('Q_B').toString();
-      return  getQ_B(A,C,sizeA[0],sizeA[0],speicher);
+      return  getQ_B(A,C,cols,cols,speicher);
     }
     else{
     var pos = nA_fest-nA;
     if(nA>0){
-       // console.log(pos);
+        //console.log(pos);
         if(pos==0){
-           // console.log(speicher);
+            //console.log(speicher);
             speicher=setRowVectorOfMatrix(speicher,0,C);
-           // console.log(speicher);
+            //console.log(speicher);
             return getQ_B(A,C,nA-1,nA_fest,speicher);
         }
         else{
             // speicher[pos]=A*speicher[pos-1];
             var newcolumn = Algebrite.dot(getRowVectorOfMatrix(speicher,nA_fest,pos-1),A).toString();
-          // console.log(newcolumn);
+            //console.log(newcolumn);
             speicher=setRowVectorOfMatrix(speicher,pos,newcolumn);
           // console.log(speicher);
             return getQ_B(A,C,nA-1,nA_fest,speicher);
@@ -204,80 +413,17 @@ function getQ_B(A,C,nA,nA_fest,speicher){
 }
 
 
-
-// matrix: "[[1,0,0],[0,1,0],[0,0,1]]"
-// returns: string representation!
-// i:zeile
-// j:spalte!
-function setMatValue(matrix,i,j,value){
-    var matrixasarray = (new Function("return " +matrix+ ";")());
-    matrixasarray[i][j]=value;
-   return arrayToString(matrixasarray);
-}
-
-function getMatValue(matrix,i,j){
-    var matrixasarray = (new Function("return " +matrix+ ";")());
-   return matrixasarray[i][j];
-}
-
-
-// Matrix as string like: [[1,0],[0,1]]
-// Column like 0
-// columnvalue like : [2,1]
-function setColumnVectorOfMatrix(matrix,column,columnvalue){
-  // handle column inputs like: [[2,1]]
-   // or [[2],[1]]
-    var columnvaluesize = (new Function("return " + Algebrite.shape(columnvalue)+ ";")()); // dimension
-    var ncolumnvaluesize= (columnvaluesize[0]);
-    if(ncolumnvaluesize!=1){ // e.g: [[2],[1]] ncolumnvaluesize=2
-        columnvalue=Algebrite.transpose(columnvalue).toString();
-       // console.log(columnvalue);
-    }
-    if(columnvalue[0]="["&&columnvalue[1]=="["){
-        columnvalue=columnvalue.substring(1);
-        columnvalue=columnvalue.substring(0,columnvalue.length-1);
-    }
-    // console.log(columnvalue);
-
-  // eigentliche logik:
-  var columnvaluesasarray =  (new Function("return " +columnvalue+ ";")());
-  // console.log(columnvaluesasarray);
-    var tmp = "";
-   for(var i=0;i<columnvaluesasarray.length;i=i+1){
-     tmp=setMatValue(matrix,i,column,columnvaluesasarray[i]);
-       matrix=tmp;
-    }
-   return matrix;
-}
-
-
-// Matrix as string like: [[1,0],[0,1]]
-// Column(Spalte) as String like:
-function setRowVectorOfMatrix(matrix,row,rowvalue){
-    if(rowvalue[0]="["&&rowvalue[1]=="["){
-        rowvalue=rowvalue.substring(1);
-        rowvalue=rowvalue.substring(0,rowvalue.length-1);
-    }
-
-    var rowvaluesasarray =  (new Function("return " +rowvalue+ ";")());
-     // console.log(rowvaluesasarray);
-    var tmp = "";
-   for(var i=0;i<rowvaluesasarray.length;i=i+1){
-     tmp=setMatValue(matrix,row,i,rowvaluesasarray[i]);
-       matrix=tmp;
-    }
-   return matrix;
-}
-
-// input: am = (new Function("return " +"[[1,2,3],[4,5,6],[7,8,9]]"+ ";")());
-// returns:[[1,2,3],[4,5,6],[7,8,9]]
+/**
+ * Converts an Array to an array as string
+ * @param {array} array(multiarray) - [[1,2],[1,2]] (as array)
+ * @return {string} Matrix  - [[1,2],[1,2]] (as string)
+ */
 function arrayToString(array){
     var arrasString ="";
     for(var j=0;j<array.length;j++){
         for(var i=0;i<array[j].length;i=i+1){
             if(i==0){
                 arrasString =arrasString+"["+array[j][i].toString();
-
             }
             else if(i==array[j].length-1){
                 arrasString=arrasString+","+array[j][i].toString()+"]";
@@ -296,125 +442,30 @@ function arrayToString(array){
    return "["+arrasString+"]";
 }
 
-function matrix2Latex(matrix){
-    if(matrix=="none"){
-        return matrix;
-    }
-
-    var matrixwithbackslash = math.parse(matrix).toTex();
-    // gives: //\begin{bmatrix}1&2\\4&5\\\end{bmatrix}
-  return matrixwithbackslash.replace("\\\\end{bmatrix}","\end{bmatrix}");
-}
-
-function myRenderer() {
-    var x = document.getElementsByClassName('equation');
-
-    // go through each of them in turn
-    for (var i = 0; i < x.length; i++) {
-        try {
-            var aa = x[i].getAttribute("data-expr");
-            if (x[i].tagName == "DIV") {
-                t = katex.render(String.raw `${aa}`, x[i], {
-                                     displayMode: false
-                                 });
-            }
-            /*
-			 * else { t= katex.render(x[i].textContent,x[i]); }
-			 */
-        } catch (err) {
-            x[i].style.color = 'red';
-            x[i].textContent = err;
-        }
-    }
-
-    var y = document.getElementsByClassName('equation_small');
-
-    // go through each of them in turn
-    for (var i = 0; i < y.length; i++) {
-        try {
-            var aa = y[i].getAttribute("data-expr");
-            if (y[i].tagName == "DIV") {
-                t = katex.render(String.raw `${aa}`, y[i], {
-                                     displayMode: false
-                                 });
-            }
-            /*
-			 * else { t= katex.render(x[i].textContent,x[i]); }
-			 */
-        } catch (err) {
-            y[i].style.color = 'red';
-            y[i].textContent = err;
-        }
-    }
-}
-
-function checkGilbert(B_JNF,C_JNF,nB,mB,nC,mC){
-
-
-    console.log(checkzeroColumn("[[0,0,0],[0,0,0],[0,0,0]]",3,3).toString());
-     console.log(checkzeroRow("[[1,0,0],[2,0,0],[3,0,1]]",3,3));
-}
-
-// matrix: [[1,0,0],[2,0,0],[3,0,1]]
-// n: rows
-// m: columns
-// @returns:a list which contains the zero columns
-function checkzeroColumn(matrix,n,m){
-    var list=[];
-
-    for(var j=0;j<m;j++){
-        var columnsum=0;
-        for(var i=0;i<n;i++){
-            columnsum=columnsum+getMatValue(matrix,i,j);
-        }
-       // console.log(columnsum);
-        if(columnsum==0){
-            var tmp=j+1
-            list.push(tmp);
-        }
-    }
-    return list;
-}
-
-// matrix: [[1,0,0],
-        // [2,0,0],
-        // [3,0,1]]
-// n: rows
-// m: columns
-// @returns:a list which contains the zero rows
-function checkzeroRow(matrix,n,m){
-    var list=[];
-
-    for(var j=0;j<m;j++){
-        var columnsum=0;
-        for(var i=0;i<n;i++){
-            columnsum=columnsum+getMatValue(matrix,j,i);
-        }
-       // console.log(columnsum);
-        if(columnsum==0){
-            var tmp=j+1;
-            list.push(tmp);
-        }
-    }
-    return list;
-}
-
-// Matrix as STring
-// like:[[0.34372376933344034,-0.8068982213550735],[0.9390708015880442,0.5906904945688723]]
-// na,Ma dimensions of Matrix
-// factor stellen nach dem komma
-function roundMatrix(MatrixasString,nA,mA,factor){
-    var matrixasarray = (new Function("return " +MatrixasString+ ";")());
-    for(var i=0;i<nA;i++){
-        for(var j=0;j<mA;j++){
+/**
+ * rounds each entry of a matrix
+ * @param {string} matrix - [[0.34372376933344034,-0.8068982213550735],[0.9390708015880442,0.5906904945688723]]
+ * @param {int} factor - 2
+ * @return {string}rounded matrix  - [[0.34,-0.81],[0.94,0.59]]
+ */
+function roundMatrix(matrix,factor){
+    var matrixasarray = (new Function("return " +matrix+ ";")());
+    var n = getRowsM(matrix);
+    var m = getColumnsM(matrix);
+    for(var i=0;i<n;i++){
+        for(var j=0;j<m;j++){
             matrixasarray[i][j]=Math.round(Math.pow(10,factor)*matrixasarray[i][j])/(Math.pow(10,factor));
         }
     }
     return arrayToString(matrixasarray);
 }
 
-
-// input: Array [ -0.9999999999999998, 0.9999999999999998 ]
+/**
+ * round each Entry of a single Array
+ * @param {array} array - Array [ -0.9999999999999998, 0.9999999999999998 ]
+ * @param {int} factor - 2
+ * @return {array} rounded array  - [[0.34,-0.81],[0.94,0.59]]
+ */
 function roundArray(array,factor){
     for(var p=0;p<array.length;p++){
     array[p]=Math.round(array[p]*Math.pow(10,factor))/(Math.pow(10,factor))
@@ -422,177 +473,374 @@ function roundArray(array,factor){
 return array;
 }
 
-// M_SH: Hautus Steuerbarkeit!
-function checkHautusS(eigArray,AasString,BasString,nA,mB){
-    var nAmB=nA+mB;
+/**
+ * calculates matrix^factor
+ * @param {string} matrix - [[1,2],[1,2]]
+ * @param {int} factor - 3
+ * @return {string} matrix*matrix*matrix  - [[61,156],[39,100]]
+ */
+function matrixpow(matrix,factor){
+ if(factor>1){
+     return matrixpow(Algebrite.dot(matrix,matrix).toString(),factor-1);
+ }
+ else{
+     return matrix;
+ }
+}
+
+/**
+ * calculate eigenvalues of a matrix
+ * Algebrite.eigenval is working kind of strange that is why this method is necessary.
+ * @param  {string} matrix(square!) - [[1.789,0,0],[0,0,0],[0,0,1]]"
+ * @return {array} eigenvalues - 1.789,1.0,0
+ */
+function eigenvalue(matrix){
+	 var n = getRowsM(matrix);
+	 var m = getColumnsM(matrix);
+	 var eigenvalues = [];
+	 var eigenval = Algebrite.eigenval(matrix).tensor.elem;
+	 if(n!=m){
+		 //TODO: stop!
+		 console.log("cannot eigenvalues of non square matirx!");
+	 }
+	 else{
+		 //1. push non zero values:
+		 for(var i = 0;i<eigenval.length;i++){
+			 if(eigenval[i]!=0){
+				 eigenvalues.push(eigenval[i]);
+			 }
+		 }
+		var tmp = (n-eigenvalues.length);
+		 //rest values are zeros:
+		 for(var j = 0;j<tmp;j++){
+			 eigenvalues.push(0);
+		 }
+	 }
+	 return eigenvalues;
+}
+
+/**
+ * calculates Rank of a Matrix
+ * if matrix is square: rank = n - eigenvalues_in_zero
+ * if matrix is not square calculate matrix*matrix^T=H rank = eigenvalues_in_zero of H
+ * @param  {string} matrix - [[1,2],[1,2]]
+ * @return {int} rank - 1
+ */
+function rankofMatrix(matrix){
+ var matrixarray = (new Function("return " + matrix+ ";")());
+ var nA = getRowsM(matrix);
+ var mA = getColumnsM(matrix);
+
+ if(nA==mA){
+	 var matrixarray = (new Function("return " + matrix+ ";")());
+	 var eigenvalues = roundArray(numeric.eig(matrixarray).lambda.x,4);
+    var eigenvalues_inzero=0;
+    for(var l=0;l<eigenvalues.length;l++){
+         if(eigenvalues[l]==0){
+             eigenvalues_inzero=eigenvalues_inzero+1;
+         }
+     }
+    return nA-eigenvalues_inzero; // this is the rank!
+ }
+ else{
+	// console.log("calc. rank of not square matrix");
+     return rankofMatrix(Algebrite.dot(matrix,Algebrite.transpose(matrix)).toString());
+ }
+}
+
+/**
+ * scalces a vector from [0.894427,-0.447214] -> [ 1, -0.5 ] 
+ * @param  {array} array - [0.894427,-0.447214]
+ * @return {array} array - [ 1, -0.5 ] 
+ */
+function scaleVec(vec){
+	var factor = 1;//1=factor*0.89
+
+    if(vec.length>=1 && vec[0] != 0){
+    	factor = 1/vec[0];
+    }
+    else if(vec.length>=2 &&! vec[1] == 0){
+    	factor = 1/vec[1];
+    }
+    //TODO make above in for loop with brack!
+    for(var j = 0;j<vec.length;j++){
+    	vec[j]=factor*vec[j];
+    	//console.log(vec[j]);
+    }
+    
+    //round vec:
+    vec = roundArray(vec,5);
+    return vec;
+}
+
+/**
+ * Computes the kernel of a Matrix Ax =0 -> k*x=?
+ * if kern does not exist veclist is empty.
+ * TODO: works only for not symbolic matrices?!
+ * @param  {string} matrix - [[1,2],[1,2]]
+ * @return {array} list of kernel vectors - [ 1, -0.5 ]
+ */
+function kerofMatrix(matrix){
+// console.log(matrix);
+ var matrixarray = (new Function("return " + matrix+ ";")());
+ var svd=numeric.svd(matrixarray);
+ var Uarray=svd.U;
+ var Sarray=svd.S; // diagonal matrix
+ var Varray=svd.V;
+// console.log(svd);
+ var veclist=[];
+for(var p=0;p<Sarray.length;p++){
+   if(Sarray[p]==0){
+       var vec = getColumnVectorOfMatrix(arrayToString(Varray),Varray.length,p).toString();
+       // console.log(vec);
+     veclist.push(vec);
+   }
+}
+
+//make the veclist nice!
+var resultarray = [];
+//console.log(veclist);
+for(var p = 0;p<veclist.length;p++){
+	var vecarray = (new Function("return " + veclist[p]+ ";")());
+	vecarray=scaleVec(vecarray);
+	//console.log(vecarray);
+	resultarray.push(vecarray);
+}
+
+return resultarray; //basis vectors!
+}
+
+
+/**
+ * Compute the generalized vector:(A-lambda I)^k x = 0
+ * if k = 0 it is simply the normal eigenvector of A of a particular eigenvalue
+ * @param  {string} matrix -  [ [ 1, 0 ], [ 0, 1 ] ]
+ * @param  {double} eigenval - 1
+ * @param  {k} generalized vector number - 0....10
+ * @return {array} list of generalized vectors -  [ [ 1, 0 ], [ 0, 1 ] ]
+ */
+function generalvector(matrix,eigenval,stufe){
+ var rows = getRowsM(matrix);
+ var cols = getColumnsM(matrix)
+ if(rows!=cols){ //Test square
+	 throw new Error("Input matrix must be square: n="+rows+", m="+cols);
+ }
+ var matrixarray = (new Function("return " + matrix+ ";")());
+ if(roundArray(numeric.eig(matrixarray).lambda.x,4).indexOf(eigenval)<0){ //test eigenvalue in matrix!
+	 throw new Error("Eigenval is not in matrix! eigenval: "+eigenval+" matrix:"+matrix);
+ }
+ var lambdaI=Algebrite.dot(Algebrite.unit(rows).toString(),eigenval).toString();
+ var AlambdaI = Algebrite.run(matrix+"-"+lambdaI).toString();
+ var tmp = matrixpow(AlambdaI,stufe).toString();
+// console.log(AlambdaI);
+// console.log(tmp);
+// console.log(kerofMatrix(tmp)); //stores eigenvectors!
+ return kerofMatrix(tmp);
+}
+
+/**
+ * Compute the transformation Matrix T of a matrix M
+ * Example: M = [[-10,1,7],[-7,2,3],[-16,2,12]] (input)
+ * T =   [[1,1,1],[1,-1,0],[1,0,2]]         (output)
+ * JNF= T^-1 M T = [[-2,0,0],[0,3,1],[0,0,3]]
+ * TODO: Caution this method currently does not check for multiple
+ * eigenvalues if the condition (A-lambdaI)^(stufe-1) v^stufe != 0 is correct!
+ * THIS feature should be added!
+ * @param  {string} matrix -  [[-10,1,7],[-7,2,3],[-16,2,12]]
+ * @return {array} jordan transform matrix -   [[1,1,1],[1,-1,0],[1,0,2]] 
+ */
+function jordantransform(matrix){
+	//calculate eigenvalues:
+	var matrixarray = (new Function("return " + matrix+ ";")());
+	var eigenvalues = roundArray(numeric.eig(matrixarray).lambda.x,4);
+	eigenvalues = eigenvalues.sort();
+	var result=[];
+	
+	var singleeigenvalues = [];
+	var multipleeigenvalues=[]; // if an eigenvalue is double this list contains it also only once!
+	//console.log(eigenvalues);
+	for(var i=0;i<eigenvalues.length-1;i++){
+		if(eigenvalues[i]!=eigenvalues[i+1]){
+			singleeigenvalues.push(eigenvalues[i]);
+		}
+		else if(multipleeigenvalues.indexOf(eigenvalues[i])==-1){
+			multipleeigenvalues.push(eigenvalues[i]);
+		}
+	}
+	//console.log(singleeigenvalues);
+	//console.log(multipleeigenvalues);
+	
+	//only single eigenvalues do it directly:
+	if(multipleeigenvalues.length==0){
+		var res = (arrayToString(numeric.eig(matrixarray).E.x));
+		//console.log(roundMatrix(res,4));
+		return (roundMatrix(res,4));
+	}
+	
+	//eigenvectors for single eigenvalues:
+	for(var p = 0;p<singleeigenvalues.length;p++){
+		result.push(generalvector(matrix,singleeigenvalues[p],1));
+	}
+	
+	//eigenvectors for multiple eigenvalues:
+	for(var p = 0;p<multipleeigenvalues.length;p++){
+		var vielfachheit = eigenvalues.indexOf(multipleeigenvalues[p])+1;
+		var tmp=1;
+		var doublelist = [];
+		while(doublelist.length!=vielfachheit){
+			var generalveclist=generalvector(matrix,multipleeigenvalues[p],tmp);
+			for(var z=0;z<generalveclist.length;z++){
+				if(doublelist.length==vielfachheit){
+					break;
+				}
+				doublelist.push(generalveclist[z]);
+				//console.log(vielfachheit)
+			}
+			tmp++;
+			//console.log(doublelist);
+		}
+		result.push(doublelist);
+	}
+	//console.log("result:");
+	//console.log(result);
+	return result;
+}
+
+
+/**
+ * Hautus Controllability Matrix: M_SH=(sI_n-A  B) 
+ * rank(sI_n-A  B) = n for all s in C ? 
+ * @param  {string} A matrix -  [[1,2],[3,4]]
+ * @param  {string} B matrix -  [[1],[0]]
+ * @return {array}  list of M_SH and not controllable eigenvalues -  [[-1 + s,-2,0,0],[-3,-4 + s,0,0]] (just M_SH cause all eigenvalues are H. controllable!)
+ */
+function checkHautusS(AasString,BasString){
+	var nA = getRowsM(AasString);
+	var mB = getColumnsM(BasString)
+	var matrixarray = (new Function("return " + AasString+ ";")());
+	var eigArray = roundArray(numeric.eig(matrixarray).lambda.x,4)
+	
+    var list=[];
+	
+	var sIN_A=Algebrite.run('s*'+'unit('+nA+')'+'-'+AasString).toString();
+
+
+	var nAmB=nA+mB;
     var resultSH ="";
     Algebrite.run('M_SH=zero('+nA+','+nAmB+')');
     var tmpSH=Algebrite.eval('M_SH').toString();
+    //place ones at the diagonal
     for(var p=0;p<nA;p++){
       resultSH= setMatValue(tmpSH,p,p,1);
         tmpSH=resultSH;
     }
     Algebrite.run('M_SH='+resultSH);
-    var M_SH=Algebrite.dot('U','M_SH').toString();
+    // U = sI-A   e.g: M_SH = ([[1,0,0],[0,1,0]]) 
+    var M_SH=Algebrite.dot(sIN_A,'M_SH').toString();
+   // console.log(M_SH);
+    M_SH=setColumnVectorOfMatrix(M_SH,nAmB-1,BasString);
+    //console.log(M_SH);
+    list.push(M_SH);
+    
 
-    var list=[];
     var result=M_SH;
     for(var z=0;z<eigArray.length;z++){
-      M_SH=result.replace(/s/g,eigArray[z]);
-      M_SH=setColumnVectorOfMatrix(M_SH,nAmB-1,BasString);
+      M_SH=result.replace(/s/g,"("+eigArray[z]+")");
+    //  console.log(M_SH);
       // M_SH="det("+matrix2Latex(M_SH)+")="+Algebrite.det(M_SH);
         if(rankofMatrix(M_SH)!=nA){
+            list.push(eigArray[z]);
+        }
+    }
+    
+    return list;
+}
+
+/**
+ * Hautus Observability Matrix: M_BH=(sI_n-A;  C) 
+ * rank(sI_n-A  B) = n for all s in C ? 
+ * @param  {string} A matrix -  [[1,2],[3,4]]
+ * @param  {string} B matrix -  [[1,0]]
+ * @return {array}  list of M_BH and not observable eigenvalues -  [[-1 + s,-2,0,0],[-3,-4 + s,0,0]] (just M_SH cause all eigenvalues are H. controllable!)
+ */
+function checkHautusB(AasString,CasString){
+	var nA = getRowsM(AasString);
+	var nC = getRowsM(CasString)
+	var matrixarray = (new Function("return " + AasString+ ";")());
+	var eigArray = roundArray(numeric.eig(matrixarray).lambda.x,4)
+	
+    var list=[];
+	
+	var sIN_A=Algebrite.run('s*'+'unit('+nA+')'+'-'+AasString).toString();
+
+	
+	var nAnC=nA+nC;
+    var resultBH ="";
+    Algebrite.run('M_BH=zero('+nAnC+','+nA+')');
+    var tmpBH=Algebrite.eval('M_BH').toString();
+    for(var p=0;p<nA;p++){
+    	resultBH= setMatValue(tmpBH,p,p,1);
+    	tmpBH=resultBH;
+    }
+
+    Algebrite.run('M_BH='+resultBH);
+    var M_BH=Algebrite.dot('M_BH',sIN_A).toString();
+	M_BH=setRowVectorOfMatrix(M_BH,nAnC-1,CasString);
+	list.push(M_BH);
+
+    var result=M_BH;
+    for(var z=0;z<eigArray.length;z++){
+    	M_BH=result.replace(/s/g,"("+eigArray[z]+")");
+        if(rankofMatrix(M_BH)!=nA){
             list.push(eigArray[z]);
         }
     }
     return list;
 }
 
-function checkHautusB(eigArray,AasString,CasString,nA,nC){
-    var nAmB=nA+nC;
-    var resultSH ="";
-    Algebrite.run('M_SH=zero('+nAmB+','+nA+')');
-    var tmpSH=Algebrite.eval('M_SH').toString();
-    console.log(tmpSH);
-    for(var p=0;p<nA;p++){
-      resultSH= setMatValue(tmpSH,p,p,1);
-        tmpSH=resultSH;
-    }
-    console.log(tmpSH);
-    Algebrite.run('M_SH='+resultSH);
-    var M_SH=Algebrite.dot('M_SH','U').toString();
-    console.log(M_SH);
+/**
+ * Calculate system-parameters of a continuous s-System.
+ * @param  {string} A matrix - [[1,2],[3,4]] (required)
+ * @param  {string} B matrix - [[1],[0]]     (required)
+ * @param  {string} C matrix - [[1,0]]       (required)
+ * @param  {string} D matrix - 0 (optional)
+ * @return {hashmap} results: 
+ * key: Description:
+ * nA	rows of Matrix A
+ * mA   columns of Matrix A
+ * nB,mB,nC,mC,nD,mD
+ * 
+ * A,B,C,D    matrix A,B,C,D
+ * 
+ */
+function calcSSys(A,B,C,D){
+	if(D=="undefined"){
+		D=0;
+	}
+	
+	var result = {};
+	
+	//0. Store Matrices:
+	result['A'] = A;
+	result['B'] = B;
+	result['C'] = C;
+	result['D'] = D;
 
-    var list=[];
-    var result=M_SH;
-    for(var z=0;z<eigArray.length;z++){
-      M_SH=result.replace(/s/g,eigArray[z]);
-      M_SH=setRowVectorOfMatrix(M_SH,nAmB-1,CasString);
-      // console.log(M_SH);
-      // M_SH="det("+matrix2Latex(M_SH)+")="+Algebrite.det(M_SH);
-        if(rankofMatrix(M_SH)!=nA){
-            list.push(eigArray[z]);
-        }
-    }
-    return list;
-}
-
-// matrix as string
-// if matrix is square: rank = n - eigenvalues_in_zero
-// if matrix is not square calculate matrix*matrix^T=H rank = n_ofH -
-// eigenvalues_in_zero of H
-function rankofMatrix(matrix){
-    var matrixarray = (new Function("return " + matrix+ ";")());
-    var sizeA = (new Function("return " + Algebrite.shape(matrix)+ ";")()); // dimension
-    var nA= (sizeA[0]);
-    var mA= (sizeA[1]);
-    // console.log(nA+" "+mA);
-    if(nA==mA){
-       var eigenvalues= roundArray(numeric.eig(matrixarray).lambda.x,3);
-       var eigenvalues_inzero=0;
-       for(var l=0;l<eigenvalues.length;l++){
-            if(eigenvalues[l]==0){
-                eigenvalues_inzero=eigenvalues_inzero+1;
-            }
-        }
-       return nA-eigenvalues_inzero; // this is the rank!
-    }
-    else{
-        return rankofMatrix(Algebrite.dot(matrix,Algebrite.transpose(matrix)).toString());
-    }
-}
-
-// matrix as string
-// if kern does not exist veclist is empty.
-function kerofMatrix(matrix){
-  // console.log(matrix);
-    var matrixarray = (new Function("return " + matrix+ ";")());
-    var svd=numeric.svd(matrixarray);
-    var Uarray=svd.U;
-    var Sarray=svd.S; // diagonal matrix
-    var Varray=svd.V;
-   // console.log(svd);
-    var veclist=[];
-  for(var p=0;p<Sarray.length;p++){
-      if(Sarray[p]==0){
-          var vec = getColumnVectorOfMatrix(arrayToString(Varray),Varray.length,p).toString();
-          // console.log(vec);
-        veclist.push(vec);
-      }
-  }
-  return veclist;
-}
-
-// matrix as string
-// compute the hauptvector:(A-lambda I)^k x = 0
-// size: assuming symmetrical matrix: size:n=m
-function generalvector(matrix,size,eigenvalue,stufe){
-    var lambdaI=Algebrite.dot(Algebrite.unit(size).toString(),eigenvalue).toString();
-    var AlambdaI = Algebrite.run(matrix+"-"+lambdaI).toString();
-    var tmp = matrixpow(AlambdaI,stufe).toString();
-    console.log(AlambdaI);
-    console.log(tmp);
-    console.log(kerofMatrix(tmp).toString());
-    return kerofMatrix(tmp).toString();
-}
-
-// calculates matrix^factor
-// matrix as string.
-function matrixpow(matrix,factor){
-    if(factor>1){
-        console.log(factor);
-        console.log(matrix);
-       // console.log(Algebrite.dot([[5,0],[0,5]],[[5,0],[0,5]]));
-        return matrixpow(Algebrite.dot(matrix,matrix).toString(),factor-1);
-    }
-    else{
-        return matrix;
-    }
-}
-
-// matrix as STRING:
-// size of Matrix.
-// algebraischeVielfachheit wenn ein eigenwert zum beispiel doppelt auftaucht
-// etc.
-// di geometrische Vielfachheit kann unterschiedlich groß sein je nach Matrix
-// und eigenvalue!
-function  computeEigenvectorsofEigenvalue(matrix,size,eigenvalue,algebraischeVielfachheit){
-    var matrixAsArray=(new Function("return " +matrix+ ";")())
-    var eigenvalues =roundArray(numeric.eig(matrixAsArray).lambda.x,4);
-    if(algebraischeVielfachheit==1){
-        // eigenvalue is einfach:
-        var tmp=0;
-        for (var z=0;z<eigenvalues.length;z++){
-            if(eigenvalues[z]==eigenvalue){
-                tmp=z;
-                break;
-            }
-        }
-       return numeric.eig(matrixAsArray).E.x[tmp];// Array containing the
-													// single eigenvector of a
-													// specific eigenvalue!
-    }
-    if(algebraischeVielfachheit>1){
-        // eigenvalue ist mehrfach: und nicht komplex?
-        var listeigenvectors=[];
-        for(var i=0;i<algebraischeVielfachheit-1;i++){
-            // first get the single eigenvalue!
-            if(i==0){
-            var tmp=0;
-            for (var z=0;z<eigenvalues.length;z++){
-                if(eigenvalues[z]==eigenvalue){
-                    tmp=z;
-                    break;
-                }
-            }
-            listeigenvectors.push( numeric.eig(matrixAsArray).E.x[tmp]);
-            }
-            else{
-                listeigenvectors.push(generalvector(matrix,sizeofMatrix,eigenvalue,i));
-            }
-        }
-    }
-    return listeigenvectors;
+	//1. Dimensions:
+	result['nA'] = getRowsM(A);
+	result['nB'] = getRowsM(B);
+	result['nC'] = getRowsM(C);
+	result['nD'] = getRowsM(D);
+	result['mA'] = getColumnsM(A);
+	result['mB'] = getColumnsM(B);
+	result['mC'] = getColumnsM(C);
+	result['mD'] = getColumnsM(D);
+	
+	//2. Transformations:
+	
+	
+	//3. Transfere Function:
+	
 }
 
 // A = Algebrite.run('A='+speicher[0]);
@@ -970,14 +1218,93 @@ function main(){
 }
 
 
+//TODO: delete following functions?
+function matrix2Latex(matrix){
+    if(matrix=="none"){
+        return matrix;
+    }
+
+    var matrixwithbackslash = math.parse(matrix).toTex();
+    // gives: //\begin{bmatrix}1&2\\4&5\\\end{bmatrix}
+  return matrixwithbackslash.replace("\\\\end{bmatrix}","\end{bmatrix}");
+}
+
+function myRenderer() {
+    var x = document.getElementsByClassName('equation');
+
+    // go through each of them in turn
+    for (var i = 0; i < x.length; i++) {
+        try {
+            var aa = x[i].getAttribute("data-expr");
+            if (x[i].tagName == "DIV") {
+                t = katex.render(String.raw `${aa}`, x[i], {
+                                     displayMode: false
+                                 });
+            }
+            /*
+			 * else { t= katex.render(x[i].textContent,x[i]); }
+			 */
+        } catch (err) {
+            x[i].style.color = 'red';
+            x[i].textContent = err;
+        }
+    }
+
+    var y = document.getElementsByClassName('equation_small');
+
+    // go through each of them in turn
+    for (var i = 0; i < y.length; i++) {
+        try {
+            var aa = y[i].getAttribute("data-expr");
+            if (y[i].tagName == "DIV") {
+                t = katex.render(String.raw `${aa}`, y[i], {
+                                     displayMode: false
+                                 });
+            }
+            /*
+			 * else { t= katex.render(x[i].textContent,x[i]); }
+			 */
+        } catch (err) {
+            y[i].style.color = 'red';
+            y[i].textContent = err;
+        }
+    }
+}
+
+
+
 module.exports = {
 Algebrite: Algebrite,
+numeric: numeric,
 
 getColumnsM: getColumnsM,
 getRowsM: getRowsM,
+getMatValue: getMatValue,
+setMatValue: setMatValue,
 getColumnVectorOfMatrix: getColumnVectorOfMatrix,
 getRowVectorOfMatrix: getRowVectorOfMatrix,
+setColumnVectorOfMatrix:setColumnVectorOfMatrix,
+setRowVectorOfMatrix:setRowVectorOfMatrix,
+checkzeroColumn:checkzeroColumn,
+checkzeroRow:checkzeroRow,
+arrayToString:arrayToString,
+roundMatrix:roundMatrix,
+roundArray: roundArray,
+matrixpow: matrixpow,
+rankofMatrix: rankofMatrix,
+eigenvalue: eigenvalue,
+kerofMatrix:kerofMatrix,
+scaleVec:scaleVec,
+generalvector:generalvector,
+jordantransform:jordantransform,
+checkHautusS:checkHautusS,
+checkHautusB:checkHautusB,
+setMatValuesym:setMatValuesym,
+arrayToMatrixString:arrayToMatrixString,
+customReplace:customReplace,
+
 check_stability: check_stability,
 getQ_S:getQ_S,
+getQ_B:getQ_B,
 }
 
