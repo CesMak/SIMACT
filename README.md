@@ -32,3 +32,5 @@ Go to main folder and test wit jasmine
 6. ./node_modules/.bin/jsdoc simact.js
 
 
+7. for the engine oneline-interpreter: 
+tr -d '\r' < inputfile | tr -d '\n' > outputfile

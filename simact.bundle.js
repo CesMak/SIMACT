@@ -26723,13 +26723,13 @@ function checkHautusB(AasString,CasString){
  * charPoly   {string}
  * inv_sIA    {string}
  * transo     {string}
- * 
+ * transoex   {string}
  * 
  */
 function calcSSys(A,B,C,D){
 	//TODO: check string repres of matrices! see algebrite!
 	if(D='undefined'){
-		D=0;
+		D="[[0]]";
 	}
 	
 	var result = {};
@@ -26760,7 +26760,7 @@ function calcSSys(A,B,C,D){
 	}
 	//s or z?
 	result['soz'] = 's';
-	console.log(result['A']+": "+result['nA']+"x"+result['mA']+result['B']+": "+result['nB']+"x"+result['mB']+result['C']+": "+result['nC']+"x"+result['mC']);
+	//console.log(result['A']+": "+result['nA']+"x"+result['mA']+result['B']+": "+result['nB']+"x"+result['mB']+result['C']+": "+result['nC']+"x"+result['mC']);
 	
 	//3. Stability
 	//TODO caution rounding factor
@@ -26776,30 +26776,30 @@ function calcSSys(A,B,C,D){
 	result['rQ_BK']=rankofMatrix(result['Q_BK']);
 	
 	if(result['rQ_SK']==result['nA']){
-		result['isKS']="System is Kalman controllable.";
+		result['isKS']="controllable.";
 		result['iQ_SK']=Algebrite.inv(result['Q_SK']).toString();
 		result['q_SK']=getRowVectorOfMatrix(result['iQ_SK'],result['nA'],result['nA']-1).toString();
 	}
 	else{
-		result['isKS']="System is not Kalman controllable.";
+		result['isKS']="not controllable.";
 		result['iQ_SK']="undefined";
 		result['q_SK']="undefined";
 	}
-	console.log('Q_SK: '+result['Q_SK']+" Q_BK: "+result["Q_BK"]+" rQ_SK:"+result['rQ_SK']+" rQ_BK:"+result['rQ_BK']);
-	console.log('isKS: '+result['isKS']+" iQ_SK: "+result["iQ_SK"]+" q_SK:"+result['q_SK']);
+	//console.log('Q_SK: '+result['Q_SK']+" Q_BK: "+result["Q_BK"]+" rQ_SK:"+result['rQ_SK']+" rQ_BK:"+result['rQ_BK']);
+	//console.log('isKS: '+result['isKS']+" iQ_SK: "+result["iQ_SK"]+" q_SK:"+result['q_SK']);
 	
 	
 	if(result['rQ_BK']==result['nA']){
-		result['isBS']="System is Kalman observable.";
+		result['isBS']="observable.";
 		result['iQ_BK']=Algebrite.inv(result['Q_BK']).toString();
 		result['q_BK']=getRowVectorOfMatrix(result['iQ_BK'],result['nA'],result['nA']-1).toString();
 	}
 	else{
-		result['isBS']="System is not Kalman observable.";
+		result['isBS']="not observable.";
 		result['iQ_BK']="undefined";
 		result['q_BK']="undefined";
 	}
-	console.log('isBS: '+result['isBS']+" iQ_BK: "+result["iQ_BK"]+" q_BK:"+result['q_BK']);
+	//console.log('isBS: '+result['isBS']+" iQ_BK: "+result["iQ_BK"]+" q_BK:"+result['q_BK']);
 	
 	//Hautus:
 	var hautusS= checkHautusS(A,B);
@@ -26812,7 +26812,7 @@ function calcSSys(A,B,C,D){
 	if(hautusnCE.length==0){
 		result['hnc']="none";
 	}
-	console.log('M_SH: '+result['M_SH']+" hnc: "+result["hnc"]);
+	//console.log('M_SH: '+result['M_SH']+" hnc: "+result["hnc"]);
 	
 	var hautusB= checkHautusB(A,C);
 	var hautusnOE =[]; //hautus not controllable eigenvalues!
@@ -26824,7 +26824,7 @@ function calcSSys(A,B,C,D){
 	if(hautusnOE.length==0){
 		result['hno']="none";
 	}
-	console.log('M_BH: '+result['M_BH']+" hno: "+result["hno"]);
+	//console.log('M_BH: '+result['M_BH']+" hno: "+result["hno"]);
 	
 	//Gilbert requires JNF! (-> see under JNF)
 	
@@ -26846,8 +26846,8 @@ function calcSSys(A,B,C,D){
 		result['B_SNF']="undefined";
 		result['C_SNF']="undefined";
 	}
-	console.log('q_SK: '+result['q_SK']+" iT_SNF: "+result["iT_SNF"]+" T_SNF: "+result['T_SNF']);
-	console.log('A_SNF: '+result['A_SNF']+" B_SNF: "+result["B_SNF"]+" C_SNF: "+result['C_SNF']);
+	//console.log('q_SK: '+result['q_SK']+" iT_SNF: "+result["iT_SNF"]+" T_SNF: "+result['T_SNF']);
+	//console.log('A_SNF: '+result['A_SNF']+" B_SNF: "+result["B_SNF"]+" C_SNF: "+result['C_SNF']);
 	
 	//BNF
 	if(result['q_BK']!="undefined"){
@@ -26866,8 +26866,8 @@ function calcSSys(A,B,C,D){
 		result['B_BNF']="undefined";
 		result['C_BNF']="undefined";
 	}
-	console.log('q_BK: '+result['q_BK']+" iT_BNF: "+result["iT_BNF"]+" T_BNF: "+result['T_BNF']);
-	console.log('A_BNF: '+result['A_BNF']+" B_BNF: "+result["B_BNF"]+" C_BNF: "+result['C_BNF']);
+	//console.log('q_BK: '+result['q_BK']+" iT_BNF: "+result["iT_BNF"]+" T_BNF: "+result['T_BNF']);
+	//console.log('A_BNF: '+result['A_BNF']+" B_BNF: "+result["B_BNF"]+" C_BNF: "+result['C_BNF']);
 	
 	
 	//JNF
@@ -26884,8 +26884,8 @@ function calcSSys(A,B,C,D){
 		result['B_JNF']="undefined";
 		result['C_JNF']="undefined";
 	}
-	console.log('T_JNF: '+result['T_JNF']+" iT_JNF: "+result["iT_JNF"]);
-	console.log('A_JNF: '+result['A_JNF']+" B_JNF: "+result["B_JNF"]+" C_JNF: "+result['C_JNF']);
+	//console.log('T_JNF: '+result['T_JNF']+" iT_JNF: "+result["iT_JNF"]);
+	//console.log('A_JNF: '+result['A_JNF']+" B_JNF: "+result["B_JNF"]+" C_JNF: "+result['C_JNF']);
 	
 	
 	//Gilbert: requires JNF!
@@ -26899,7 +26899,7 @@ function calcSSys(A,B,C,D){
 		result['gnc']="undefined";
 		result['gno']="undefined";
 	}
-	console.log('gnc: '+result['gnc']+" gno: "+result["gno"]);
+	//console.log('gnc: '+result['gnc']+" gno: "+result["gno"]);
 	
 	//6. Transfere Function:
 	//TODO: test mit simplyfiy ob besser aussieht.
@@ -26907,7 +26907,7 @@ function calcSSys(A,B,C,D){
     result['inv_sIA']=Algebrite.run('simplify(inv(s*unit('+result["nA"]+')-'+A+"))").toString();
     result['transo']=Algebrite.dot(C,result['inv_sIA'],B).toString();//Caution this is a matrix!
 
-    console.log('charPoly: '+result['charPoly']+" inv_sIA: "+result["inv_sIA"]+" transo: "+result["transo"]);
+   // console.log('charPoly: '+result['charPoly']+" inv_sIA: "+result["inv_sIA"]+" transo: "+result["transo"]);
     
     // Partialbruchzerlegung Go(s)
     var transfere_expanded2="";
@@ -26922,7 +26922,7 @@ function calcSSys(A,B,C,D){
         }
         result['transoex']=transfere_expanded2;
     }
-    console.log('transoex: '+result['transoex']);
+   // console.log('transoex: '+result['transoex']);
     // Pole Placement:
 
     // Ortskurve:
@@ -26965,6 +26965,7 @@ checkHautusB:checkHautusB,
 setMatValuesym:setMatValuesym,
 arrayToMatrixString:arrayToMatrixString,
 customReplace:customReplace,
+onmessage:onmessage,
 
 check_stability: check_stability,
 getQ_S:getQ_S,
