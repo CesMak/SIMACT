@@ -32,5 +32,11 @@ Go to main folder and test wit jasmine
 6. ./node_modules/.bin/jsdoc simact.js
 
 
-7. for the engine oneline-interpreter: 
-tr -d '\r' < inputfile | tr -d '\n' > outputfile
+7. If you want to change the Algebrite.js file:
+
+-> Git clone algebrite
+-> in Eclipse: create new project
+-> into that project import (from File System) and slect the downloaded folder
+
+8. Changing algebrite js:
+go to runtime -> symbol.coffee and change outputs!

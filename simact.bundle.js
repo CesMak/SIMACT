@@ -24048,7 +24048,7 @@
 
   symbolsinfo = function() {
     var bindingi, i, l1, ref2, ref3, symbolsinfoToBePrinted, symtabi;
-    symbolsinfoToBePrinted = "";
+    symbolsinfoToBePrinted = {};
     for (i = l1 = ref2 = NIL + 1, ref3 = symtab.length; ref2 <= ref3 ? l1 < ref3 : l1 > ref3; i = ref2 <= ref3 ? ++l1 : --l1) {
       if (symtab[i].printname === "") {
         if (isSymbolReclaimable[i] === false) {
@@ -24057,9 +24057,9 @@
           continue;
         }
       }
-      symtabi = symtab[i] + "";
-      bindingi = (binding[i] + "").substring(0, 4);
-      symbolsinfoToBePrinted += "symbol: " + symtabi + " size: " + countsize(binding[i]) + " value: " + bindingi + "...\n";
+      symtabi = symtab[i];
+      bindingi = binding[i];
+      symbolsinfoToBePrinted[symtabi] = bindingi;
     }
     return symbolsinfoToBePrinted;
   };
@@ -26932,8 +26932,16 @@ function calcSSys(A,B,C,D){
     return result;
 }
 
-function converteachElementofHashmapTOLATEX(){
-	
+/**
+ * getfnclist
+ * @return {array} a list of all functions of the simact library
+ */
+function getfnclist(){
+	return ["getColumnsM","getRowsM","getMatValue","setMatValue","getColumnVectorOfMatrix",
+		"getRowVectorOfMatrix","setColumnVectorOfMatrix","setRowVectorOfMatrix","checkzeroColumn",
+		"checkzeroRow","arrayToString","roundMatrix","roundArray","matrixpow","rankofMatrix","eigenvalue",
+		"kerofMatrix","scaleVec","generalvector","jordantransform","checkHautusB","checkHautusS",
+		"setMatValuesym","arrayToMatrixString","customReplace","getfnclist"];
 }
 
 module.exports = {
@@ -26965,7 +26973,8 @@ checkHautusB:checkHautusB,
 setMatValuesym:setMatValuesym,
 arrayToMatrixString:arrayToMatrixString,
 customReplace:customReplace,
-onmessage:onmessage,
+getfnclist:getfnclist,
+
 
 check_stability: check_stability,
 getQ_S:getQ_S,

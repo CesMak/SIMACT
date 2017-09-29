@@ -1062,8 +1062,16 @@ function calcSSys(A,B,C,D){
     return result;
 }
 
-function converteachElementofHashmapTOLATEX(){
-	
+/**
+ * getfnclist
+ * @return {array} a list of all functions of the simact library
+ */
+function getfnclist(){
+	return ["getColumnsM","getRowsM","getMatValue","setMatValue","getColumnVectorOfMatrix",
+		"getRowVectorOfMatrix","setColumnVectorOfMatrix","setRowVectorOfMatrix","checkzeroColumn",
+		"checkzeroRow","arrayToString","roundMatrix","roundArray","matrixpow","rankofMatrix","eigenvalue",
+		"kerofMatrix","scaleVec","generalvector","jordantransform","checkHautusB","checkHautusS",
+		"setMatValuesym","arrayToMatrixString","customReplace","getfnclist"];
 }
 
 module.exports = {
@@ -1095,8 +1103,8 @@ checkHautusB:checkHautusB,
 setMatValuesym:setMatValuesym,
 arrayToMatrixString:arrayToMatrixString,
 customReplace:customReplace,
+getfnclist:getfnclist,
 
-onmessage:onmessage,
 
 check_stability: check_stability,
 getQ_S:getQ_S,

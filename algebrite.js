@@ -24047,7 +24047,7 @@
 
   symbolsinfo = function() {
     var bindingi, i, l1, ref2, ref3, symbolsinfoToBePrinted, symtabi;
-    symbolsinfoToBePrinted = "";
+    symbolsinfoToBePrinted = {};
     for (i = l1 = ref2 = NIL + 1, ref3 = symtab.length; ref2 <= ref3 ? l1 < ref3 : l1 > ref3; i = ref2 <= ref3 ? ++l1 : --l1) {
       if (symtab[i].printname === "") {
         if (isSymbolReclaimable[i] === false) {
@@ -24056,9 +24056,9 @@
           continue;
         }
       }
-      symtabi = symtab[i] + "";
-      bindingi = (binding[i] + "").substring(0, 4);
-      symbolsinfoToBePrinted += "symbol: " + symtabi + " size: " + countsize(binding[i]) + " value: " + bindingi + "...\n";
+      symtabi = symtab[i];
+      bindingi = binding[i];
+      symbolsinfoToBePrinted[symtabi] = bindingi;
     }
     return symbolsinfoToBePrinted;
   };
