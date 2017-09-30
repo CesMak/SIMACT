@@ -94,30 +94,128 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             
-<h4 class="name" id="Algebrite"><span class="type-signature"></span>Algebrite<span class="type-signature"></span></h4>
 
+    
+
+    
+    <h4 class="name" id="arrayToMatrixString"><span class="type-signature"></span>arrayToMatrixString<span class="signature">(String, columns, rows)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    Control Theory Library of Markus Lamprecht
-
-Depens on: Algebrite http://algebrite.org/
-
-Rules:
-1. Use this Documentation style: http://usejsdoc.org/
-2. no console.log arguments!
-3. Tests Jasmine
-4. Remember to exports new function at the end of this document!
-
-Algebrite:
-Algebrite.dot(firstarg is not allowed to be a singular matrix!!!, ...)
+    Converts a single Arry to a Matrix String
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>String</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">repr of a single Array - "1,1,2,2"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>columns</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">of the input matrix - 2</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rows</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">of the input matrix - 2</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -153,7 +251,7 @@ Algebrite.dot(firstarg is not allowed to be a singular matrix!!!, ...)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line16">line 16</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line92">line 92</a>
     </li></ul></dd>
     
 
@@ -169,11 +267,463 @@ Algebrite.dot(firstarg is not allowed to be a singular matrix!!!, ...)
 
 
 
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
         
+<div class="param-desc">
+    matrix -"[[1,1],[2,2]]"
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
     
 
     
-        <h3 class="subsection-title">Methods</h3>
+    <h4 class="name" id="arrayToString"><span class="type-signature"></span>arrayToString<span class="signature">(array(multiarray))</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Converts an Array to an array as string
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>array(multiarray)</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[[1,2],[1,2]] (as array)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line422">line 422</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Matrix  - [[1,2],[1,2]] (as string)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="calcSSys"><span class="type-signature"></span>calcSSys<span class="signature">(A, B, C, D)</span><span class="type-signature"> &rarr; {hashmap}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Calculate system-parameters of a continuous s-System.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>A</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix - [[1,2],[3,4]] (required)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>B</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix - [[1],[0]]     (required)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>C</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix - [[1,0]]       (required)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>D</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix - 0 (optional)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line859">line 859</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    results: 
+key: 	  Description:
+nA		  rows of Matrix A
+mA   	  columns of Matrix A
+nB,mB,nC,mC,nD,mD
+
+A,B,C,D     matrix A,B,C,D
+
+som        {string} SISO or MIMO System?
+soz        {string} continuous(s) or discrete(z) System?
+eigA		  {array}  eigenvalues of A Matrix
+stability  {string} stable or unstable
+
+Q_SK		  {string} controllability Matrix Kalman
+Q_BK		  {string} observability   Matrix Kalman
+
+rQ_SK	  {int}    rank of Q_S matrix
+iQ_SK	  {string} Q_S^-1 matrix if not existant: iQ_SK="undefined"
+isKS	      {string} System is (not) Kalman controllable
+q_SK       {string} q_tilde vector last column of Q_S^-1 (required for SNF transformation)
+(same for observability matrices Q_B)
+
+M_SH	      {string} Hautus Controllability Matrix
+hnc        {array}  Hautus not controllable Eigenvalues
+M_BH	      {string} Hautus Observability Matrix
+hno        {array}  Hautus not observable Eigenvalues
+gnc		  {array}  Gilbert not controllable Eigenvalues
+gno		  {array}  Gilbert not observable eigenvalues
+
+T_SNF	  {string} Transformation Matrix to the Controllability normal form (undefined if q_SK = undefined)
+iT_SNF     {string} inverse of T_SNF  (undefined if q_SK = undefined)
+A_SNF      {string} A_SNF=iT_SNF*A*T_SNF transforemd A Matrix (undefined if q_SK = undefined)
+B_SNF      {string} B_SNF=... (undefined if q_SK = undefined)
+C_SNF	  {string} C_SNF=... (undefined if q_SK = undefined)
+TODO: D_SNF: ...
+T_BNF,iT_BNF, A_BNF,B_BNF,C_BNF analoge for Observability normal form
+T_JNF,iT_JNF, A_JNF,B_JNF,C_JNF analoge for jordan normal form
+
+charPoly   {string}
+inv_sIA    {string}
+transo     {string}
+transoex   {string}
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">hashmap</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
 
         
             
@@ -306,7 +856,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line194">line 194</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line313">line 313</a>
     </li></ul></dd>
     
 
@@ -345,6 +895,1270 @@ Prints out if the System is stable or not.
     <dd>
         
 <span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkHautusB"><span class="type-signature"></span>checkHautusB<span class="signature">(A, B)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Hautus Observability Matrix: M_BH=(sI_n-A;  C) 
+rank(sI_n-A  B) = n for all s in C ?
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>A</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix -  [[1,2],[3,4]]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>B</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix -  [[1,0]]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line774">line 774</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    list of M_BH and not observable eigenvalues -  [[-1 + s,-2,0,0],[-3,-4 + s,0,0]] (just M_SH cause all eigenvalues are H. controllable!)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkHautusS"><span class="type-signature"></span>checkHautusS<span class="signature">(A, B)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Hautus Controllability Matrix: M_SH=(sI_n-A  B) 
+rank(sI_n-A  B) = n for all s in C ?
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>A</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix -  [[1,2],[3,4]]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>B</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">matrix -  [[1],[0]]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line725">line 725</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    list of M_SH and not controllable eigenvalues -  [[-1 + s,-2,0,0],[-3,-4 + s,0,0]] (just M_SH cause all eigenvalues are H. controllable!)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkzeroColumn"><span class="type-signature"></span>checkzeroColumn<span class="signature">(Matrix)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Check zero Rows of a Matrix
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A - [[1,0,0],[2,0,0],[3,0,1]]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line264">line 264</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    list which contains columns that contain only zero's  - [2] (second column is a zero column!)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="checkzeroRow"><span class="type-signature"></span>checkzeroRow<span class="signature">(Matrix)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Check zero Rows of a Matrix
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A - [[0,0,0],[2,0,0],[3,0,1]]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line287">line 287</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    list which contains rows that contain only zero's  - [1] (first row is a zero row!)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="customReplace"><span class="type-signature"></span>customReplace<span class="signature">(str, strTextToReplace, strReplaceWith, replaceAt)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Replaces
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>str</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">input data - "1,1,2,2"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>strTextToReplace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">","</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>strReplaceWith</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">"],["</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>replaceAt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">2</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line111">line 111</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    replaced string -"1,1],[2,2"
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="eigenvalue"><span class="type-signature"></span>eigenvalue<span class="signature">(matrix(square!))</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    calculate eigenvalues of a matrix
+Algebrite.eigenval is working kind of strange that is why this method is necessary.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix(square!)</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[[1.789,0,0],[0,0,0],[0,0,1]]"</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line505">line 505</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    eigenvalues - 1.789,1.0,0
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="generalvector"><span class="type-signature"></span>generalvector<span class="signature">(matrix, eigenval, generalized)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Compute the generalized vector:(A-lambda I)^k x = 0
+if k = 0 it is simply the normal eigenvector of A of a particular eigenvalue
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[ [ 1, 0 ], [ 0, 1 ] ]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>eigenval</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">double</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">1</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>generalized</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">k</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">vector number - 0....10</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line630">line 630</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    list of generalized vectors -  [ [ 1, 0 ], [ 0, 1 ] ]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
 
 
     </dd>
@@ -463,7 +2277,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line24">line 24</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -644,7 +2458,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line73">line 73</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line141">line 141</a>
     </li></ul></dd>
     
 
@@ -667,6 +2481,114 @@ Prints out if the System is stable or not.
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getfnclist"><span class="type-signature"></span>getfnclist<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    getfnclist
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line1069">line 1069</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    a list of all functions of the simact library
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -825,7 +2747,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line60">line 60</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line128">line 128</a>
     </li></ul></dd>
     
 
@@ -1087,7 +3009,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line267">line 267</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line386">line 386</a>
     </li></ul></dd>
     
 
@@ -1349,7 +3271,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line225">line 225</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line344">line 344</a>
     </li></ul></dd>
     
 
@@ -1506,7 +3428,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line34">line 34</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line39">line 39</a>
     </li></ul></dd>
     
 
@@ -1687,7 +3609,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line106">line 106</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line174">line 174</a>
     </li></ul></dd>
     
 
@@ -1721,6 +3643,1184 @@ Prints out if the System is stable or not.
     
 
     
+    <h4 class="name" id="jordantransform"><span class="type-signature"></span>jordantransform<span class="signature">(matrix)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Compute the transformation Matrix T of a matrix M
+Example: M = [[-10,1,7],[-7,2,3],[-16,2,12]] (input)
+T =   [[1,1,1],[1,-1,0],[1,0,2]]         (output)
+JNF= T^-1 M T = [[-2,0,0],[0,3,1],[0,0,3]]
+TODO: Caution this method currently does not check for multiple
+eigenvalues if the condition (A-lambdaI)^(stufe-1) v^stufe != 0 is correct!
+THIS feature should be added!
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[[-10,1,7],[-7,2,3],[-16,2,12]]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line660">line 660</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    jordan transform matrix -   [[1,1,1],[1,-1,0],[1,0,2]]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="kerofMatrix"><span class="type-signature"></span>kerofMatrix<span class="signature">(matrix)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Computes the kernel of a Matrix Ax =0 -> k*x=?
+if kern does not exist veclist is empty.
+TODO: works only for not symbolic matrices?!
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[[1,2],[1,2]]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line591">line 591</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    list of kernel vectors - [ 1, -0.5 ]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="matrixpow"><span class="type-signature"></span>matrixpow<span class="signature">(matrix, factor)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    calculates matrix^factor
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[[1,2],[1,2]]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>factor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">3</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line490">line 490</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    matrix*matrix*matrix  - [[61,156],[39,100]]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="rankofMatrix"><span class="type-signature"></span>rankofMatrix<span class="signature">(matrix)</span><span class="type-signature"> &rarr; {int}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    calculates Rank of a Matrix
+if matrix is square: rank = n - eigenvalues_in_zero
+if matrix is not square calculate matrix*matrix^T=H rank = eigenvalues_in_zero of H
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[[1,2],[1,2]]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line537">line 537</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    rank - 1
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">int</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="roundArray"><span class="type-signature"></span>roundArray<span class="signature">(array, factor)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    round each Entry of a single Array
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array [ -0.9999999999999998, 0.9999999999999998 ]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>factor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">2</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line477">line 477</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    rounded array  - [[0.34,-0.81],[0.94,0.59]]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="roundMatrix"><span class="type-signature"></span>roundMatrix<span class="signature">(matrix, factor)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    rounds each entry of a matrix
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[[0.34372376933344034,-0.8068982213550735],[0.9390708015880442,0.5906904945688723]]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>factor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">2</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line458">line 458</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    rounded matrix  - [[0.34,-0.81],[0.94,0.59]]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="scaleVec"><span class="type-signature"></span>scaleVec<span class="signature">(array)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    scalces a vector from [0.894427,-0.447214] -> [ 1, -0.5 ]
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[0.894427,-0.447214]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line564">line 564</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    array - [ 1, -0.5 ]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="setColumnVectorOfMatrix"><span class="type-signature"></span>setColumnVectorOfMatrix<span class="signature">(Matrix, column, new)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
@@ -1730,6 +4830,7 @@ Prints out if the System is stable or not.
 
 <div class="description">
     Set a column vector of matrix!
+TODO fails if input matrix contains symbols!
 </div>
 
 
@@ -1868,7 +4969,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line138">line 138</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line207">line 207</a>
     </li></ul></dd>
     
 
@@ -1932,7 +5033,7 @@ Prints out if the System is stable or not.
 
 
 <div class="description">
-    Set a value of a Matrix
+    Set a value of a Matrix (matrix is only allowed to contain numbers)
 </div>
 
 
@@ -1984,7 +5085,7 @@ Prints out if the System is stable or not.
 
             
 
-            <td class="description last">A - [[1,2],[3,4]]</td>
+            <td class="description last">A - [[1,2],[3,4]] (is not allowed to contain symbols!)</td>
         </tr>
 
     
@@ -2094,7 +5195,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line47">line 47</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -2150,6 +5251,232 @@ Prints out if the System is stable or not.
     
 
     
+    <h4 class="name" id="setMatValuesym"><span class="type-signature"></span>setMatValuesym<span class="signature">(Matrix, i, j, value)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Set a value of a Matrix (Symbolic values in matrix are allowed!)
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Matrix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A - "[[1,1,1],[2,2,2],[3,3,3]]"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>i</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">row  - 0 (first value!)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>j</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">column- 2 (third value)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">to set - "s+6"</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    matrix - resulting Matrix "[[1,1,s+6],[2,2,2],[3,3,3]]"
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="setRowVectorOfMatrix"><span class="type-signature"></span>setRowVectorOfMatrix<span class="signature">(Matrix, row, new)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
@@ -2158,7 +5485,7 @@ Prints out if the System is stable or not.
 
 
 <div class="description">
-    Set a column vector of matrix!
+    Set a Row vector of matrix!
 </div>
 
 
@@ -2297,7 +5624,7 @@ Prints out if the System is stable or not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line171">line 171</a>
+        <a href="simact.js.html">simact.js</a>, <a href="simact.js.html#line242">line 242</a>
     </li></ul></dd>
     
 
@@ -2363,13 +5690,13 @@ Prints out if the System is stable or not.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Algebrite">Algebrite</a></li><li><a href="global.html#check_stability">check_stability</a></li><li><a href="global.html#getColumnsM">getColumnsM</a></li><li><a href="global.html#getColumnVectorOfMatrix">getColumnVectorOfMatrix</a></li><li><a href="global.html#getMatValue">getMatValue</a></li><li><a href="global.html#getQ_B">getQ_B</a></li><li><a href="global.html#getQ_S">getQ_S</a></li><li><a href="global.html#getRowsM">getRowsM</a></li><li><a href="global.html#getRowVectorOfMatrix">getRowVectorOfMatrix</a></li><li><a href="global.html#setColumnVectorOfMatrix">setColumnVectorOfMatrix</a></li><li><a href="global.html#setMatValue">setMatValue</a></li><li><a href="global.html#setRowVectorOfMatrix">setRowVectorOfMatrix</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#arrayToMatrixString">arrayToMatrixString</a></li><li><a href="global.html#arrayToString">arrayToString</a></li><li><a href="global.html#calcSSys">calcSSys</a></li><li><a href="global.html#check_stability">check_stability</a></li><li><a href="global.html#checkHautusB">checkHautusB</a></li><li><a href="global.html#checkHautusS">checkHautusS</a></li><li><a href="global.html#checkzeroColumn">checkzeroColumn</a></li><li><a href="global.html#checkzeroRow">checkzeroRow</a></li><li><a href="global.html#customReplace">customReplace</a></li><li><a href="global.html#eigenvalue">eigenvalue</a></li><li><a href="global.html#generalvector">generalvector</a></li><li><a href="global.html#getColumnsM">getColumnsM</a></li><li><a href="global.html#getColumnVectorOfMatrix">getColumnVectorOfMatrix</a></li><li><a href="global.html#getfnclist">getfnclist</a></li><li><a href="global.html#getMatValue">getMatValue</a></li><li><a href="global.html#getQ_B">getQ_B</a></li><li><a href="global.html#getQ_S">getQ_S</a></li><li><a href="global.html#getRowsM">getRowsM</a></li><li><a href="global.html#getRowVectorOfMatrix">getRowVectorOfMatrix</a></li><li><a href="global.html#jordantransform">jordantransform</a></li><li><a href="global.html#kerofMatrix">kerofMatrix</a></li><li><a href="global.html#matrixpow">matrixpow</a></li><li><a href="global.html#rankofMatrix">rankofMatrix</a></li><li><a href="global.html#roundArray">roundArray</a></li><li><a href="global.html#roundMatrix">roundMatrix</a></li><li><a href="global.html#scaleVec">scaleVec</a></li><li><a href="global.html#setColumnVectorOfMatrix">setColumnVectorOfMatrix</a></li><li><a href="global.html#setMatValue">setMatValue</a></li><li><a href="global.html#setMatValuesym">setMatValuesym</a></li><li><a href="global.html#setRowVectorOfMatrix">setRowVectorOfMatrix</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 22 2017 19:02:19 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 30 2017 08:59:09 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
