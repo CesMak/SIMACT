@@ -25947,20 +25947,33 @@ function setMatValuesym(matrix,i,j,value){
 	array[sumval]=value;
 	//console.log(array);
 	
-	var output = arrayToMatrixString(array.toString(),mA,nA);
+	var output = arrayToMatrixStringR(array.toString(),mA,nA);
 	//console.log(output);
 	return output;
 }
 
 /**
-* Converts a single Arry to a Matrix String
+* Converts a single Arry to a Matrix String column by column
+* @param {String} String repr of a single Array - "1,1,1,1,−1,2,1,0,2"
+* @param {int}  columns of the input matrix - 3
+* @param {int}  rows of the input matrix - 3
+* @return {string} matrix -"[[1,1,1],[1,-1,0],[1,2,2]]"
+*/
+function arrayToMatrixStringC(stringarray,maxColumns,maxRows){
+	var res= arrayToMatrixStringR(stringarray,maxColumns,maxRows);
+	return Algebrite.transpose(res).toString();
+}
+
+/**
+* Converts a single Arry to a Matrix String row by row!
 * @param {String} String repr of a single Array - "1,1,2,2"
 * @param {int}  columns of the input matrix - 2
 * @param {int}  rows of the input matrix - 2
 * @return {string} matrix -"[[1,1],[2,2]]"
 */
-function arrayToMatrixString(stringarray,maxColumns,maxRows){
+function arrayToMatrixStringR(stringarray,maxColumns,maxRows){
 	var tmp = stringarray;
+	tmp = tmp.replace(/−/g, '-'); //minus haben irwie nicht richtig geklappt!
 	var res ="";
 	for(var p = maxColumns;p<(maxColumns*maxRows);p=p+maxColumns){
 		res = customReplace(tmp,',','],[',p);
@@ -26525,7 +26538,7 @@ function generalvector(matrix,eigenval,stufe){
  * eigenvalues if the condition (A-lambdaI)^(stufe-1) v^stufe != 0 is correct!
  * THIS feature should be added!
  * @param  {string} matrix -  [[-10,1,7],[-7,2,3],[-16,2,12]]
- * @return {array} jordan transform matrix -   [[1,1,1],[1,-1,0],[1,0,2]] 
+ * @return {array} jordan transform matrix T-  T= [[1,1,1],[1,-1,0],[1,0,2]] = 1,1,1,1,−1,2,1,0,2
  */
 function jordantransform(matrix){
 	//calculate eigenvalues:
@@ -26941,7 +26954,8 @@ function getfnclist(){
 		"getRowVectorOfMatrix","setColumnVectorOfMatrix","setRowVectorOfMatrix","checkzeroColumn",
 		"checkzeroRow","arrayToString","roundMatrix","roundArray","matrixpow","rankofMatrix","eigenvalue",
 		"kerofMatrix","scaleVec","generalvector","jordantransform","checkHautusB","checkHautusS",
-		"setMatValuesym","arrayToMatrixString","customReplace","getfnclist"];
+		"setMatValuesym","arrayToMatrixStringR","arrayToMatrixStringC","customReplace","getfnclist",
+		"getQ_S","getQ_B","check_stability","calcSSys"];
 }
 
 module.exports = {
@@ -26971,7 +26985,8 @@ jordantransform:jordantransform,
 checkHautusS:checkHautusS,
 checkHautusB:checkHautusB,
 setMatValuesym:setMatValuesym,
-arrayToMatrixString:arrayToMatrixString,
+arrayToMatrixStringR:arrayToMatrixStringR,
+arrayToMatrixStringC:arrayToMatrixStringC,
 customReplace:customReplace,
 getfnclist:getfnclist,
 

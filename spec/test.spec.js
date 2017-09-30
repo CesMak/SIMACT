@@ -223,12 +223,21 @@ describe("Test:  setMatValuesym(matrix,i,j,value)", function() {
 
 
 
-describe("Test:  arrayToMatrixString(stringarray,maxrows)", function() {
+describe("Test:  arrayToMatrixStringC(stringarray,maxColumns,maxRows)", function() {
+
+	it("@return", function() {
+		var AA = "1,1,1,1,−1,2,1,0,2";
+		expect(simact.arrayToMatrixStringC(AA,3,3)).toBe("[[1,1,1],[1,-1,0],[1,2,2]]");
+	});
+	
+});
+
+describe("Test:  arrayToMatrixStringR(stringarray,maxColumns,maxRows)", function() {
 
 	//not square matrices: works!
 	it("@return", function() {
 		var AA = "-1 + s,-2,0,-3,-4 + s,0";
-		expect(simact.arrayToMatrixString(AA,3,2)).toBe("[[-1 + s,-2,0],[-3,-4 + s,0]]");
+		expect(simact.arrayToMatrixStringR(AA,3,2)).toBe("[[-1 + s,-2,0],[-3,-4 + s,0]]");
 	});
 	
 });
