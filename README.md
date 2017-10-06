@@ -22,19 +22,20 @@ If you want to install the simact library on your pc do the following:
 4. Testing:`npm install jasmine`
 	* Go in the spec folder and create a test.spec.js file
 	* Enter a simple test in that file: ```
-var simact  = require("../simact"); describe("hello world",function(){ it("result should be ...",function(){ //console.log(sim.add(0.2)); expect(simact.addPP(0.2)).toBe(0.2); });});```
- iii. Go to main folder and test with `jasmine`
+var simact  = require("../simact"); describe("hello world",function(){ it("result should be ...",function(){ //console.log(sim.add(0.2)); expect(simact.addPP(0.2)).toBe(0.2); });});
+```
+ 	* Go to main folder and test with `jasmine`
 
 5. Documentation: 
-  i.`npm install jsdoc`
-  ii. `./node_modules/.bin/jsdoc simact.js`
+  * `npm install jsdoc`
+  * `./node_modules/.bin/jsdoc simact.js`
 
 
 7. If you want to change the Algebrite.js file:
- i.   Git clone algebrite
- ii.  in Eclipse: create new project
- iii. into that project import (from File System) and slect the downloaded folder
- iiii. eg.: go to runtime -> symbol.coffee and change outputs!
+ *   Git clone algebrite
+ *  in Eclipse: create new project
+ * into that project import (from File System) and slect the downloaded folder
+ * eg.: go to runtime -> symbol.coffee and change outputs!
 
 
 ## Dependency ##
