@@ -5,10 +5,10 @@ SIMACT (Simulative Adaptive Control Theory) is an advanced library for control t
 ## Usage ##
 Just include the **simact.bundle.js** file in your website! 
 
-See this libray in action at: ct.simact.de 
+See this libray in action at: http:://ct.simact.de 
 
 ## Documentation ##
-www.ct.simact.de/doc
+http:://ct.simact.de/doc
 
 ## Dependency ##
 The SIMACT Library depends on:
