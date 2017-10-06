@@ -230,6 +230,8 @@ describe("Test:  arrayToMatrixStringC(stringarray,maxColumns,maxRows)", function
 		expect(simact.arrayToMatrixStringC(AA,3,3)).toBe("[[1,1,1],[1,-1,0],[1,2,2]]");
 	});
 	
+	
+	
 });
 
 describe("Test:  arrayToMatrixStringR(stringarray,maxColumns,maxRows)", function() {
@@ -596,4 +598,92 @@ describe("Test:  calcSSys(A,B,C,D)", function() {
 });	
 
 
+
+describe("Test:  checksingleeig", function() {
+
+	it("@return", function() {
+		var A = "[[1,2],[3,4]]";
+		expect(simact.checksingleeig(A)).toBe(true); //string rep
+	});
+	});	
+
+
+describe("Test:  getMatValuesym", function() {
+
+	it("@return", function() {
+		var A = "[[1,2s],[3,4]]";
+		expect(simact.getMatValuesym(A,0,0)).toBe('1'); //string rep
+	});
+	it("@return", function() {
+		var A = "[[1,2s],[3,4]]";
+		expect(simact.getMatValuesym(A,0,1)).toBe('2s'); //string rep
+	});
+	});	
+
+
+describe("Test:  function calctransitionm(matrix)", function() {
+
+	it("@return", function() {
+		var A = "[[1,2],[3,4]]";
+		expect(simact.calctransitionm(A).toString()).toBe('[[0.761107 exp(-0.372 t) + 0.238893 exp(5.372 t),-0.348164 exp(-0.372 t) + 0.348164 exp(5.372 t)],[-0.522234 exp(-0.372 t) + 0.522234 exp(5.372 t),0.238893 exp(-0.372 t) + 0.761107 exp(5.372 t)]]'); //string rep
+	});
+	
+	it("@return", function() {
+		var A = "[[1,0],[0,4]]";
+		expect(simact.calctransitionm(A).toString()).toBe('[[exp(t),0],[0,exp(4 t)]]'); //string rep
+	});
+});	
+
+describe("Test:  timesol", function() {
+
+	it("@return", function() {
+		var A = "[[1,0],[0,4]]";
+		var B = "[[1],[0]]";
+		var C = "[[1,1]]";
+		var start ="[[1],[1]]";
+		//depends on startvalues!
+		expect(simact.timesol(A,B,C,start).toString()).toBe('-1 + 2 exp(t) + exp(4 t)'); //string rep
+	});
+	
+});	
+
+
+describe("Test:  timesolstates", function() {
+	it("@return", function() {
+		var A = "[[1,0],[0,4]]";
+		var B = "[[1],[0]]";
+		var start ="[[1],[1]]";
+		//depends on startvalues!
+		expect(simact.timesolstates(A,B,start)['states'].toString()).toBe('[[-1 + 2 exp(t)],[exp(4 t)]]'); //string rep
+	});
+	
+	//seems to work:
+	it("@return", function() {
+		var A = "[[-4,-2],[1,-1]]";
+		var B = "[[1],[0]]";
+		var start ="[[1],[2]]";
+		//depends on startvalues!
+		expect(simact.timesolstates(A,B,start)['states'].toString()).toBe('[[0.166667 + 5.33333 exp(-3.0 t) - 4.5 exp(-2.0 t)],[0.166667 - 2.66667 exp(-3.0 t) + 4.5 exp(-2.0 t)]]'); //string rep
+	});
+});	
+
+describe("Test:  calcvaluesoffunction", function() {
+
+	it("@return", function() {
+		expect(simact.calcvaluesoffunction("-1 + 2 exp(t) + exp(4 t)",0,3,0.5,"t").toString()).toBe('0,2.0,0.5,9.6865,1,59.0347,1.5,411.392,2,2994.74,2.5,22049.8,3,162794.0'); //string rep
+	});
+	
+});	
+
+
+describe("Test:  vec2array", function() {
+
+	it("@return", function() {
+		expect(simact.vec2array("[[-1 + 2 exp(t)],[exp(4 t)]]").toString()).toBe('-1 + 2 exp(t),exp(4 t)'); //string rep
+	});
+	
+	it("@return", function() {
+		expect(simact.vec2array("[[-1 + 2 exp(t)],[exp(4 t)]]","t").toString()).toBe('-1 + 2 exp(x),exp(4 x)'); //string rep
+	});
+});	
  	
