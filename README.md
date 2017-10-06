@@ -20,8 +20,9 @@ If you want to install the simact library on your pc do the following:
 3. `browserify simact.js --standalone simact > simact.bundle.js`
 
 4. Testing:`npm install jasmine`
-  i. Go in the spec folder and create a test.spec.js file
-  ii. Enter a simple test in that file: `var simact  = require("../simact"); describe("hello world",function(){ it("result should be ...",function(){ //console.log(sim.add(0.2)); expect(simact.addPP(0.2)).toBe(0.2); });});`
+	i. Go in the spec folder and create a test.spec.js file
+	ii. Enter a simple test in that file: ```
+var simact  = require("../simact"); describe("hello world",function(){ it("result should be ...",function(){ //console.log(sim.add(0.2)); expect(simact.addPP(0.2)).toBe(0.2); });});```
  iii. Go to main folder and test with `jasmine`
 
 5. Documentation: 
