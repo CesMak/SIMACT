@@ -15,40 +15,21 @@ If you want to install the simact library on your pc do the following:
 
 1. Copy algebrite.js and simact.js into a simact-lib folder
 
-2. 'npm install big-integer' also 'npm install browserify'
+2. `npm install big-integer` also `npm install browserify`
 
-3. 'browserify simact.js --standalone simact > simact.bundle.js'
+3. `browserify simact.js --standalone simact > simact.bundle.js`
 
-4. Testing:
-(install jasmine before in main folder)
-jasmine init -> creates spec folder
-
-go to spec folder
-create test.spec.js file and fill it with:
-`
-var simact  = require("../simact");
-
-describe("hello world",function(){
-
-
-it("result should be ...",function(){
-//console.log(sim.add(0.2));
-expect(simact.addPP(0.2)).toBe(0.2);
-});
-
-
-});
-`
-Go to main folder and test with jasmine
+4. Testing:`npm install jasmine`
+  i. Go in the spec folder and create a test.spec.js file
+  ii. Enter a simple test in that file: `var simact  = require("../simact"); describe("hello world",function(){ it("result should be ...",function(){ //console.log(sim.add(0.2)); expect(simact.addPP(0.2)).toBe(0.2); });});`
+ iii. Go to main folder and test with `jasmine`
 
 5. Documentation: 
-  i.'npm install jsdoc'
-
-  ii. ' ./node_modules/.bin/jsdoc simact.js'
+  i.`npm install jsdoc`
+  ii. `./node_modules/.bin/jsdoc simact.js`
 
 
 7. If you want to change the Algebrite.js file:
-
  i.   Git clone algebrite
  ii.  in Eclipse: create new project
  iii. into that project import (from File System) and slect the downloaded folder
