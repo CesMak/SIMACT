@@ -1,10 +1,18 @@
 
 # SIMACT #
-SIMACT (Simulative Adaptive Control Theory) is an advanced library for control theory. This library can do symbolic calculations and contains many basic functions like calculating the observability or controllability matrix. 
+SIMACT (Simulative Adaptive Control Theory) is an advanced library for control theory. This library can do symbolic calculations and contains many basic functions like calculating the observability or controllability matrix.
+
+## Usage ##
+Just include the **simact.bundle.js** file in your website! 
 
 ## Documentation ##
 
-## Installation ##
+## Changes on SIMACT ##
+
+If I should do some changes please open a new Issue.
+
+If you want to install the simact library on your pc do the following:
+
 1. Copy algebrite.js and simact.js into a simact-lib folder
 
 2. 'npm install big-integer' also 'npm install browserify'
@@ -17,7 +25,7 @@ jasmine init -> creates spec folder
 
 go to spec folder
 create test.spec.js file and fill it with:
-'''
+`
 var simact  = require("../simact");
 
 describe("hello world",function(){
@@ -30,22 +38,21 @@ expect(simact.addPP(0.2)).toBe(0.2);
 
 
 });
-'''
-
+`
 Go to main folder and test with jasmine
 
 5. Documentation: 
-i.'npm install jsdoc'
+  i.'npm install jsdoc'
 
-ii. ' ./node_modules/.bin/jsdoc simact.js'
+  ii. ' ./node_modules/.bin/jsdoc simact.js'
 
 
 7. If you want to change the Algebrite.js file:
 
-i.   Git clone algebrite
-ii.  in Eclipse: create new project
-iii. into that project import (from File System) and slect the downloaded folder
-iiii. eg.: go to runtime -> symbol.coffee and change outputs!
+ i.   Git clone algebrite
+ ii.  in Eclipse: create new project
+ iii. into that project import (from File System) and slect the downloaded folder
+ iiii. eg.: go to runtime -> symbol.coffee and change outputs!
 
 
 ## Dependency ##
