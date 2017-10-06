@@ -1,10 +1,15 @@
-1. Copy algebrite.js and simact.js into simact-lib folder
 
-2. npm install big-integer
+# SIMACT #
+SIMACT (Simulative Adaptive Control Theory) is an advanced library for control theory. This library can do symbolic calculations and contains many basic functions like calculating the observability or controllability matrix. 
 
-3. browserify simact.js --standalone simact > simact.bundle.js
+## Documentation ##
 
+## Installation ##
+1. Copy algebrite.js and simact.js into a simact-lib folder
 
+2. 'npm install big-integer' also 'npm install browserify'
+
+3. 'browserify simact.js --standalone simact > simact.bundle.js'
 
 4. Testing:
 (install jasmine before in main folder)
@@ -12,6 +17,7 @@ jasmine init -> creates spec folder
 
 go to spec folder
 create test.spec.js file and fill it with:
+'''
 var simact  = require("../simact");
 
 describe("hello world",function(){
@@ -24,19 +30,31 @@ expect(simact.addPP(0.2)).toBe(0.2);
 
 
 });
+'''
 
-Go to main folder and test wit jasmine
+Go to main folder and test with jasmine
 
-5. Documentation:npm install jsdoc
+5. Documentation: 
+i.'npm install jsdoc'
 
-6. ./node_modules/.bin/jsdoc simact.js
+ii. ' ./node_modules/.bin/jsdoc simact.js'
 
 
 7. If you want to change the Algebrite.js file:
 
--> Git clone algebrite
--> in Eclipse: create new project
--> into that project import (from File System) and slect the downloaded folder
+i.   Git clone algebrite
+ii.  in Eclipse: create new project
+iii. into that project import (from File System) and slect the downloaded folder
+iiii. eg.: go to runtime -> symbol.coffee and change outputs!
 
-8. Changing algebrite js:
-go to runtime -> symbol.coffee and change outputs!
+
+## Dependency ##
+The SIMACT Library depends on:
+* [Algebrite](www.algebrite.org) which depends on: [BigInteger](https://github.com/peterolson/BigInteger.js/tree/master)
+* [Numeric js](www.numericjs.com)
+
+## License ##
+Copyright 2017: Markus Lamprecht, Contact: MarkusLamprecht@live.de
+If you want to use this library please make sure you also respect the licenses of the Algebrite, Numeric js and BigInteger library (see under Dependency). 
+
+
