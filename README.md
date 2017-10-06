@@ -4,8 +4,20 @@ SIMACT (Simulative Adaptive Control Theory) is an advanced library for control t
 
 ## Usage ##
 Just include the **simact.bundle.js** file in your website! 
+See this libray in action at: www.ct.simact.de 
 
 ## Documentation ##
+www.ct.simact.de/doc
+
+## Dependency ##
+The SIMACT Library depends on:
+* [Algebrite](www.algebrite.org) which depends on: [BigInteger](https://github.com/peterolson/BigInteger.js/tree/master)
+* [Numeric js](www.numericjs.com)
+
+## License ##
+Copyright 2017: Markus Lamprecht, Contact: MarkusLamprecht@live.de
+If you want to use this library please make sure you also respect the licenses of the Algebrite, Numeric js and BigInteger library (see under Dependency). 
+
 
 ## Changes on SIMACT ##
 
@@ -34,14 +46,3 @@ If you want to install the simact library on your pc do the following:
  	* in Eclipse: create new project
  	* into that project import (from File System) and slect the downloaded folder
  	* eg.: go to runtime -> symbol.coffee and change outputs!
-
-
-## Dependency ##
-The SIMACT Library depends on:
-* [Algebrite](www.algebrite.org) which depends on: [BigInteger](https://github.com/peterolson/BigInteger.js/tree/master)
-* [Numeric js](www.numericjs.com)
-
-## License ##
-Copyright 2017: Markus Lamprecht, Contact: MarkusLamprecht@live.de
-If you want to use this library please make sure you also respect the licenses of the Algebrite, Numeric js and BigInteger library (see under Dependency). 
-
