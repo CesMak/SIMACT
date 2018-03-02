@@ -1,4 +1,3 @@
-
 # SIMACT #
 SIMACT (Simulative Adaptive Control Theory) is an advanced library for control theory. This library can do symbolic calculations and contains many basic functions like calculating the observability or controllability matrix.
 
@@ -47,3 +46,17 @@ If you want to install the simact library on your pc do the following:
  	* in Eclipse: create new project
  	* into that project import (from File System) and slect the downloaded folder
  	* eg.: go to runtime -> symbol.coffee and change outputs!
+ 	
+## Testing:
+
+Go to simact-lib folder and run:
+`jasmine`
+
+
+## Changing algebrite:
+1. Go to alg folder and to runtime/run.coffee
+2. Change something: e.g.: console.log("ahalad")
+3. npm run build-for-browser
+4. Kopiere aus dist erstellte algebrite.js datei in meine simact.lib
+5. Führe dort: browserify simact.js --standalone simact > simact.bundle.js aus
+6. nun sollten die änderungen mit einbindung von simact.bundle.js aktiv sein.

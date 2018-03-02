@@ -17,6 +17,16 @@
 var Algebrite = require('./algebrite');
 var numeric = require('./numeric');
 
+
+/**
+ * Open help page in new page
+ */
+function getOpenWebpageHashMap(){
+	var map = {};
+	map["help"]="file:///home/markus/eclipse_web/SIMACT-web/sub_pages/Engine/engine_help.html";
+	return map;
+}
+
 /**
  * Get the Columns of a Matrix
  * 
@@ -939,7 +949,7 @@ function checkHautusB(AasString, CasString) {
  * @param {string}
  *            B matrix - [[1],[0]] (required)
  * @param {string}
- *            C matrix - [[1,0]] (required)        
+ *            C matrix - [[1,0]] (required)
  * @param {string}
  *            D matrix - 0 (optional)
  * @param {string}
@@ -977,10 +987,7 @@ function checkHautusB(AasString, CasString) {
  * charPoly {string} inv_sIA {string} transo {string} transoex {string}
  * 
  * 
- * transitionA{string}
- * states{Array}
- * inoutsol{string}
- * eigensol{string}
+ * transitionA{string} states{Array} inoutsol{string} eigensol{string}
  */
 function calcSSys(A, B, C, D,x_0) {
 	// TODO: check string repres of matrices! see algebrite!
@@ -1212,14 +1219,16 @@ function calcSSys(A, B, C, D,x_0) {
 	// PZM - root locus:
 	
 	//
-	//Drawing stuff:
+	// Drawing stuff:
 	//
 	
-	//time solution:
+	// time solution:
 	if(x_0!=null){
 		var restime = timesolstates(A,B,x_0);
 		result['transitionA']=restime['phiAt'];
-		result['states']=vec2array(restime['states'],"t");  //<- give it back as arry of functions!
+		result['states']=vec2array(restime['states'],"t");  // <- give it back
+															// as arry of
+															// functions!
 		result['eigensol']=restime['eigensol'];
 		result['inoutsol']=restime['inoutsol'];
 	}
@@ -1233,8 +1242,8 @@ function calcSSys(A, B, C, D,x_0) {
 function calctransitionm(matrix) {
 	if (checksingleeig) {// all eigenvalues are single!
 		// e^At = T^-1 A_neu T
-		//e^At=T e^(T^-1 A T) T^-1
-		//console.log("eigenvalues all single");
+		// e^At=T e^(T^-1 A T) T^-1
+		// console.log("eigenvalues all single");
 		var T_JNF = jordantransform(matrix).toString();
 		var iT_JNF = Algebrite.inv(T_JNF).toString();
 		var A_JNF = roundMatrix(Algebrite.dot(iT_JNF, matrix, T_JNF).toString(), 3);
@@ -1246,7 +1255,7 @@ function calctransitionm(matrix) {
 		return Algebrite.dot(T_JNF,A_neu,iT_JNF).toString();
 
 	} else {
-		//TODO!!!!
+		// TODO!!!!
 		console.log("ERROR this does not work yet eigenvalues are not single ");
 		var tmp = "[[1,0],[0,1]]";
 		// console.log(Algebrite.run("[[1,0],[1,0]]+[[t,0],[0,2
@@ -1263,12 +1272,13 @@ function calctransitionm(matrix) {
 }
 
 
-//func: -1 + 2 exp(t) + exp(4 t)
-//start: 0
-//end: 3
-//step:0.1
-//variable: 't'
-//return:'0,2.0,0.5,9.6865,1,59.0347,1.5,411.392,2,2994.74,2.5,22049.8,3,162794.0 (multiple array!)
+// func: -1 + 2 exp(t) + exp(4 t)
+// start: 0
+// end: 3
+// step:0.1
+// variable: 't'
+// return:'0,2.0,0.5,9.6865,1,59.0347,1.5,411.392,2,2994.74,2.5,22049.8,3,162794.0
+// (multiple array!)
 function calcvaluesoffunction(func,start,end,step,variable){
 	var res = [];
 	var tmp ="";
@@ -1276,11 +1286,11 @@ function calcvaluesoffunction(func,start,end,step,variable){
 	for(var p=start;p<=end;p=p+step){
 	tmp = func.replaceAll(variable,p);
 	tmp = Algebrite.run(tmp).toString();
-	//point.push(p);point.push()
+	// point.push(p);point.push()
 	res.push([p,Algebrite.float(tmp).toString()]);
 	}
 	return res;
-	//console.log(res);
+	// console.log(res);
 }
 
 String.prototype.replaceAll = function(search, replacement) {
@@ -1304,11 +1314,11 @@ function checksingleeig(matrix) {
 	return true;
 }
 
-//matrix as strings!
-//x_start = x_0 as matrix: [[0],[1]] 
-//für einheitssprung: u(t) = 1 für t>0
-//just for SISO! working!
-//y = Cx
+// matrix as strings!
+// x_start = x_0 as matrix: [[0],[1]]
+// für einheitssprung: u(t) = 1 für t>0
+// just for SISO! working!
+// y = Cx
 function timesol(A,B,C,x_start){
 	var res =  Algebrite.dot(C,timesolstates(A,B,x_start)['states']).toString();
 	res=res.replace(/\[/g, '');
@@ -1316,9 +1326,9 @@ function timesol(A,B,C,x_start){
 return res;
 }
 
-//convert vector to single array:
-//[[-1 + 2 exp(t)],[exp(4 t)]] ->-1 + 2 exp(t),exp(4 t) (as Array)
-//replace variables! t->x
+// convert vector to single array:
+// [[-1 + 2 exp(t)],[exp(4 t)]] ->-1 + 2 exp(t),exp(4 t) (as Array)
+// replace variables! t->x
 function vec2array(vec,variable){
 	var tmp = vec.toString();
 	tmp=tmp.replace(/\[/g, '');
@@ -1331,34 +1341,34 @@ function vec2array(vec,variable){
 	return tmp.split(",");
 }
 
-//für sprung und SISO x(t)
-//return hashmap of results: 
+// für sprung und SISO x(t)
+// return hashmap of results:
 function timesolstates(A,B,x_start){
 	var results = {};
 	var phiAt = calctransitionm(A);
     var phiAttau = phiAt.replace(/t/g, '(t-tau)');
-	//console.log(phiAttau);
+	// console.log(phiAttau);
 	var eigensol=Algebrite.dot(phiAt,x_start).toString();
-	//eigensol=eigensol.replace(/\[/g, '');
-	//eigensol=eigensol.replace(/\]/g, '');
-	//console.log(eigensol);
+	// eigensol=eigensol.replace(/\[/g, '');
+	// eigensol=eigensol.replace(/\]/g, '');
+	// console.log(eigensol);
 	
-	//inoutsol = int_0^t  C e^(A(t-tau)) B u(tau) dtau
+	// inoutsol = int_0^t C e^(A(t-tau)) B u(tau) dtau
 	var inoutsol=Algebrite.dot(phiAttau,B).toString(); // -> [[exp(t - tau)]]
 	inoutsol=inoutsol.replace(/\[/g, '');
 	inoutsol=inoutsol.replace(/\]/g, '');
-	//console.log("inout: "+inoutsol);
+	// console.log("inout: "+inoutsol);
 	inoutsol = inoutsol.split(",");
-	//console.log(inoutsol);
+	// console.log(inoutsol);
 	var inoutarr = [];
 	for(var p = 0;p<inoutsol.length;p++){
 		inoutarr.push(Algebrite.defint(inoutsol[p],"tau",0,"t").toString());
 	}
-	//console.log(inoutarr);
-	//arrayToMatrixStringC(stringarray, maxColumns, maxRows) 
+	// console.log(inoutarr);
+	// arrayToMatrixStringC(stringarray, maxColumns, maxRows)
 	inoutsol=arrayToMatrixStringC(inoutarr.toString(),inoutsol.length-1,0);
 	var tmp = eigensol+"+"+inoutsol+"";
-	//console.log("tmp: "+tmp);
+	// console.log("tmp: "+tmp);
 	tmp=(Algebrite.run(tmp).toString());
 	results['states']=tmp;
 	results['phiAt']=phiAt;
@@ -1381,7 +1391,7 @@ function getfnclist() {
 			"kerofMatrix", "scaleVec", "generalvector", "jordantransform",
 			"checkHautusB", "checkHautusS", "setMatValuesym",
 			"arrayToMatrixStringR", "arrayToMatrixStringC", "customReplace",
-			"getfnclist", "getQ_S", "getQ_B", "check_stability", "calcSSys" ];
+			"getfnclist", "getQ_S", "getQ_B", "check_stability", "calcSSys"];
 }
 
 module.exports = {
@@ -1428,4 +1438,6 @@ module.exports = {
 	timesolstates:timesolstates,
 	calcvaluesoffunction:calcvaluesoffunction,
 	vec2array:vec2array,
+	
+	getOpenWebpageHashMap:getOpenWebpageHashMap,
 }

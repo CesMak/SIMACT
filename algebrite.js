@@ -23529,6 +23529,7 @@
       generateLatex = false;
     }
     timeStart = new Date().getTime();
+    console.log("string to be executed in alg/runtime/run.coffee:" + stringToBeRun);
     stringToBeRun = normaliseDots(stringToBeRun);
     if (ENABLE_CACHING && stringToBeRun !== "clearall") {
       currentStateHash = getStateHash();
