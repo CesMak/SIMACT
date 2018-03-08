@@ -17,6 +17,67 @@
 var Algebrite = require('./algebrite');
 var numeric = require('./numeric');
 
+/**
+ * plot function: for subplots see: https://plot.ly/javascript/subplots/
+ * for animations see: https://plot.ly/javascript/animations/#animating-with-a-slider (see Frames!)
+ * @param {string} expression - "sin(x)"
+ * @param {string} div_name  - name to be ploted in
+ */
+function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expression, xname_="x", yname_="y"){
+	x1=convertString_TO_Vector(x1);
+	y1=eval_expression(expression, x1);
+			var trace1 = {
+			  x: x1, 
+			  y: y1, 
+			  type: 'scatter',
+			  name: expression
+			};
+			var data = [trace1];
+			var layout = {
+//					  autosize: false,
+//					  width: 500,
+//					  height: 250,
+					  title: title_,
+					  xaxis: {
+						  title: xname_
+					  },
+					  yaxis: {
+						  title: yname_
+					  }
+			}
+	Plotly.newPlot(div_name, data, layout);
+	return 0;
+}
+
+// e.g. [-5,-4.9,-4.800000000000001,-4.700000000000001] -> array of numbers.
+function convertString_TO_Vector(input_str){
+	input_str = input_str.substring(1,input_str.length -1);
+	input_arr = input_str.split(",");
+	result = [];
+	for (var i=0,l=input_arr.length;i<l;i++) result.push(+input_arr[i]);
+	return result;
+}
+
+function linspace(start, end, stepsize){
+	res =""
+	for (i=start;i<=end+stepsize; i=i+stepsize){
+		res=res+i.toString()+","
+	}
+	res = res.substring(0, res.length - 1);
+	res="["+res+"]"
+	return res;
+}
+
+// as variable x
+function eval_expression(expression, x_vector, variable="x", rounding_factor = 2){
+	var res = [];
+	for(var i=0;i<x_vector.length;i++){
+	tmp = expression.replaceAll(variable, "("+x_vector[i]+")");
+	tmp = Algebrite.run(tmp).toString();
+	res.push(Algebrite.float(tmp).toString());
+	}
+	return roundArray(res, rounding_factor);
+}
 
 /**
  * Open help page in new page
@@ -1378,7 +1439,7 @@ function timesolstates(A,B,x_start){
 }
 
 /**
- * getfnclist
+ * getfnclist of simact functions!
  * 
  * @return {array} a list of all functions of the simact library
  */
@@ -1391,7 +1452,40 @@ function getfnclist() {
 			"kerofMatrix", "scaleVec", "generalvector", "jordantransform",
 			"checkHautusB", "checkHautusS", "setMatValuesym",
 			"arrayToMatrixStringR", "arrayToMatrixStringC", "customReplace",
-			"getfnclist", "getQ_S", "getQ_B", "check_stability", "calcSSys"];
+			"getfnclist", "getQ_S", "getQ_B", "check_stability", "calcSSys",
+			"plot", "linspace", "get_algebrite_functionlist"];
+}
+
+/**
+ * get_algebrite_functionlist
+ * see here: http://algebrite.org/docs/latest-stable/reference.html
+ * @return {array} a list of all functions of the algebrite library
+ */
+function get_algebrite_functionlist(){
+	return [ "abs", "adj", "and", "arccos",
+		"arccosh", "arcsin",
+		"arcsinh", "arctan",
+		"arctanh", "arg", "besselj", "bessely",
+		"ceiling", "check", "choose", "circexp",
+		"clear", "clearall", "coeff", "cofactor",
+		"conj", "contract", "cos",
+		"cosh", "cross", "curl",
+		"d", "defint", "deg", "det", "dim",
+		"do", "dot","eigen", "eigenval", "eigenvec", "erf", "erfc",
+		"eval", "exp", "expand", "expcos", "expsin",
+		"factor", "factorial", "filter", "float", "floor",
+		"for", "gcd", "hermite", "hilbert", "imag",
+		"inner", "integral", "inv", "isprime", "laguerre",
+		"lcm", "leading", "legendre", "log", "lookup",
+		"mod", "not", "nroots", "numerator", "or",
+		"outer", "polar", "prime", "print", "print2dascii",
+		"printfull", "printlatex", "printlist", "printplain", "product",
+		"quote", "quotient", "rank", "rationalize", "real",
+		"rect", "roots", "shape", "simplify", "sin",
+		"sinh", "sqrt", "stop", "subst", "sum",
+		"symbolsinfo", "tan", "tanh", "taylor", "test",
+		"transpose", "unit", "version", "zero"
+		];
 }
 
 module.exports = {
@@ -1425,6 +1519,7 @@ module.exports = {
 	arrayToMatrixStringC : arrayToMatrixStringC,
 	customReplace : customReplace,
 	getfnclist : getfnclist,
+	get_algebrite_functionlist,
 
 	check_stability : check_stability,
 	getQ_S : getQ_S,
@@ -1440,4 +1535,6 @@ module.exports = {
 	vec2array:vec2array,
 	
 	getOpenWebpageHashMap:getOpenWebpageHashMap,
+	plot:plot,
+	linspace:linspace,
 }
