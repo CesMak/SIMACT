@@ -25894,6 +25894,10 @@ var numeric = require('./numeric');
  * @param {string} div_name  - name to be ploted in
  */
 function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expression, xname_="x", yname_="y"){
+	if(typeof(x1)=="object"){
+		x1="["+x1.toString()+"]";
+	}
+	console.log(x1);
 	x1=convertString_TO_Vector(x1);
 	y1=eval_expression(expression, x1);
 			var trace1 = {
@@ -25966,6 +25970,7 @@ function getOpenWebpageHashMap(){
  * @return{int} columns of Matrix - 2
  */
 function getColumnsM(matrix) {
+	matrix=arrayToString(matrix);
 	var size = (new Function("return " + Algebrite.shape(matrix).toString()
 			+ ";")());
 	return size[1];
@@ -25979,6 +25984,7 @@ function getColumnsM(matrix) {
  * @return{int} rows of Matrix - 1
  */
 function getRowsM(matrix) {
+	matrix=arrayToString(matrix);
 	var size = (new Function("return " + Algebrite.shape(matrix).toString()
 			+ ";")());
 	return size[0];
@@ -25998,6 +26004,7 @@ function getRowsM(matrix) {
  * @return {string} matrix - resulting Matrix "[[1,2],[0.12398,4]]"
  */
 function setMatValue(matrix, i, j, value) {
+	matrix=arrayToString(matrix);
 	var matrixasarray = (new Function("return " + matrix + ";")());
 	matrixasarray[i][j] = value;
 	return arrayToString(matrixasarray);
@@ -26017,6 +26024,7 @@ function setMatValue(matrix, i, j, value) {
  * @return {string} matrix - resulting Matrix "[[1,1,s+6],[2,2,2],[3,3,3]]"
  */
 function setMatValuesym(matrix, i, j, value) {
+	matrix=arrayToString(matrix);
 	var mA = getColumnsM(matrix);
 	var nA = getRowsM(matrix);
 	matrix = matrix.replace(/\[/g, '');
@@ -26111,6 +26119,7 @@ function customReplace(strData, strTextToReplace, strReplaceWith, replaceAt) {
  * @return {int} value of Matrix at i,j - 3
  */
 function getMatValue(matrix, i, j) {
+	matrix=arrayToString(matrix);
 	var matrixasarray = (new Function("return " + matrix + ";")());
 	return matrixasarray[i][j];
 }
@@ -26142,6 +26151,7 @@ function getMatValuesym(matrix, i, j) {
  * @return{string} standing vector - [[23],[34],[2],[1.6]]
  */
 function getColumnVectorOfMatrix(matrixasString, columnsofMatrix, pos) {
+	matrixasString=arrayToString(matrixasString);
 	var a = "["; // ligender Vektor!
 	for (var i = 0; i < columnsofMatrix; i++) {
 		if (i != columnsofMatrix - 1) {
@@ -26180,6 +26190,7 @@ function getColumnVectorOfMatrix(matrixasString, columnsofMatrix, pos) {
  * @return{string} lying vector - [[12,34]]
  */
 function getRowVectorOfMatrix(matrixasString, rowsofMatrix, pos) {
+	matrixasString=arrayToString(matrixasString);
 	var a = "["; // ligender Vektor!
 	for (var i = 0; i < rowsofMatrix; i++) {
 		if (i != rowsofMatrix - 1) {
@@ -26215,6 +26226,7 @@ function getRowVectorOfMatrix(matrixasString, rowsofMatrix, pos) {
  * @return {string} new Matrix - [[2,0],[1,1]]
  */
 function setColumnVectorOfMatrix(matrix, column, columnvalue) {
+	matrix=arrayToString(matrix);
 	// handle column inputs like: [[2,1]]
 	// or [[2],[1]]
 	var columnvaluesize = (new Function("return "
@@ -26257,6 +26269,7 @@ function setColumnVectorOfMatrix(matrix, column, columnvalue) {
  * @return {string} new Matrix - [[2,0],[1,1]]
  */
 function setRowVectorOfMatrix(matrix, row, rowvalue) {
+	matrix=arrayToString(matrix);
 	if (rowvalue[0] = "[" && rowvalue[1] == "[") {
 		rowvalue = rowvalue.substring(1);
 		rowvalue = rowvalue.substring(0, rowvalue.length - 1);
@@ -26281,6 +26294,7 @@ function setRowVectorOfMatrix(matrix, row, rowvalue) {
  *         (second column is a zero column!)
  */
 function checkzeroColumn(matrix) {
+	matrix=arrayToString(matrix);
 	var list = [];
 	var n = getRowsM(matrix);
 	var m = getColumnsM(matrix);
@@ -26307,6 +26321,7 @@ function checkzeroColumn(matrix) {
  *         (first row is a zero row!)
  */
 function checkzeroRow(matrix) {
+	matrix=arrayToString(matrix);
 	var list = [];
 	var n = getRowsM(matrix);
 	var m = getColumnsM(matrix);
@@ -26368,6 +26383,8 @@ function check_stability(eigenvalues, system) {
  * @return {string} Matrix - Q_S
  */
 function getQ_S(A, B, nA, nA_fest, speicher) {
+	A=arrayToString(A);
+	B=arrayToString(B);
 	// console.log(Algebrite.run('Q_S=unit('+2+','+2+')'));
 	if (typeof nA == 'undefined') {
 		var cols = getColumnsM(A);
@@ -26415,6 +26432,8 @@ function getQ_S(A, B, nA, nA_fest, speicher) {
  * @return {string} Matrix - Q_B
  */
 function getQ_B(A, C, nA, nA_fest, speicher) {
+	A=arrayToString(A);
+	C=arrayToString(C);
 	if (typeof nA == 'undefined') {
 		var cols = getColumnsM(A);
 		var speicher = Algebrite.run('Q_B=unit(' + cols + ',' + cols + ')');
@@ -26452,6 +26471,9 @@ function getQ_B(A, C, nA, nA_fest, speicher) {
  * @return {string} Matrix - [[1,2],[1,2]] (as string)
  */
 function arrayToString(array) {
+	if(typeof(array)=="string"){
+		return array;
+	}
 	var arrasString = "";
 	// console.log(array.toString());
 	for (var j = 0; j < array.length; j++) {
@@ -26546,6 +26568,7 @@ function matrixpow(matrix, factor) {
  * @return {array} eigenvalues - 1.789,1.0,0
  */
 function eigenvalue(matrix) {
+	matrix=arrayToString(matrix);
 	var n = getRowsM(matrix);
 	var m = getColumnsM(matrix);
 	var eigenvalues = [];
@@ -26838,6 +26861,8 @@ function checkHautusS(AasString, BasString) {
  *         controllable!)
  */
 function checkHautusB(AasString, CasString) {
+	AasString=(arrayToString(AasString));
+	CasString=(arrayToString(CasString));
 	var nA = getRowsM(AasString);
 	var nC = getRowsM(CasString)
 	var matrixarray = (new Function("return " + AasString + ";")());
@@ -26868,7 +26893,7 @@ function checkHautusB(AasString, CasString) {
 		if (rankofMatrix(M_BH) != nA) {
 			list.push(eigArray[z]);
 		}
-	}
+	}	
 	return list;
 }
 
