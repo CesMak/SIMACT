@@ -27,8 +27,14 @@ function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expr
 	if(typeof(x1)=="object"){ // if: plot('x^2',linspace(-1,2,0.4)) // as linspace comes in as object
 		x1="["+x1.toString()+"]";
 	}
+	
 	x1=convertString_TO_Vector(x1);
+	if(typeof(expression)=="string"){
 	y1=eval_expression(expression, x1);
+	}
+	else{ // expression is the result vector!
+		y1=convertString_TO_Vector(expression);
+	}
 			var trace1 = {
 			  x: x1, 
 			  y: y1, 
@@ -52,6 +58,232 @@ function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expr
 	return 0;
 }
 
+/**
+ * used for bode plotting btw. for plotting a transfere function!
+ * @param x_vec vectors have same length and are comming in like: 
+ * @param y_vec Array [ "0", "2", "4", "6", "8", "10", "12", "14", "16", "18", … ]
+ * @param div_name
+ * @param title
+ * @param xname_
+ * @param yname_
+ * @param omega_value "[0,2,4,6,8,10,12,14,16,18,20,2210000]"
+ * @returns
+ */
+function plot_tf(x_vec, y_vec,omega_value, title="z=x+iy", div_name="plot1", name_="G(s)", xname_="real, x", yname_="imag, iw"){
+	omega_value = omega_value.substring(1,omega_value.length-1);
+	omega_value =omega_value.split(",");
+	for(var i = 0;i<x_vec.length;i++){
+		x_vec[i]=Number(x_vec[i]);
+		y_vec[i]=Number(y_vec[i]);
+		omega_value[i]="w="+omega_value[i];
+	}
+	
+			var layout = {
+					  title: title_,
+					  xaxis: {
+						  title: xname_
+					  },
+					  yaxis: {
+						  title: yname_
+					  }
+			}
+			
+			var data = [
+				  {
+				    x: x_vec,
+				    y: y_vec,
+				    /* mode: 'markers',*/
+				   /* marker: {size:2},*/
+				    text: omega_value,
+				    type: 'scatter',
+				    name: "G(s)",
+				  }
+				];
+	Plotly.newPlot(div_name, data, layout);
+			
+	return 0;
+}
+
+/**
+ * 
+ * @param amplitude as  Array [ "0.0", "-1.10715", "-1.32582", "-1.40565", "-1.44644", "-1.47113", "-1.48766", "-1.49949", "-1.50838", "-1.5153", … ]
+ * @param phase  as Array [ "0.0", "-1.10715", "-1.32582", "-1.40565", "-1.44644", "-1.47113", "-1.48766", "-1.49949", "-1.50838", "-1.5153", … ]
+ * @param omega_str
+ * @returns
+ */
+function plot_bode(amplitude, phase, omega_str, yname1_="Magnitude (dB)", yname2_ = "Phase(deg)", div_1 ="plot2", div_2 = "plot3"){
+	omega_str = omega_str.substring(1, omega_str.length-1);
+	omega_str = omega_str.split(",");
+	for(var i = 0;i<amplitude.length;i++){
+		amplitude[i]=Number(amplitude[i]);
+		phase[i]=Number(phase[i]);
+	}
+	
+	var trace1 = {
+			  x: omega_str, 
+			  y: amplitude, 
+			  type: 'scatter',
+			  name: 'amplitude',
+			};
+	var trace2 = {
+		  x: omega_str, 
+		  y: phase, 
+		  xaxis: 'x2',
+		  yaxis: 'y2',
+		  type: 'scatter',
+		  name: 'phase'
+		};
+	var data = [trace1, trace2];
+
+	
+	var layout = {
+			  xaxis: {
+			    type: 'log',
+			    autorange: true,
+				title: "omega w in Hz"
+			  },
+			  yaxis: {
+				  title: "Magintude(dB)",
+				  autorange: true,
+				  domain: [0, 0.4]
+			  },
+			  xaxis2: {anchor: 'y2', autorange: true, type:'log'},
+			  yaxis2: {
+				  title: "Phase (deg)",
+				  domain: [0.5, 1]
+			  },
+			  title: "Bode Diagramm:",
+			};
+	Plotly.newPlot(div_1, data, layout);
+	//Plotly.newPlot(div_2, data2, layout);
+}
+
+/**
+ * Wenn ungerade anzahl dann in subplots!
+ * @param x1_vec
+ * @param y1_vec
+ * @returns
+ */
+function mplot(x1_vec, y1_vec/*, param="in_one"*/){
+	var all_input_vectors_arg_length =0;
+	var in_one = true;
+	
+	// no param set 
+	if(arguments.length%2==0){
+		all_input_vectors_arg_length=arguments.length;
+	}
+	else if(arguments.length%2==1){
+		all_input_vectors_arg_length=arguments.length-1;
+		in_one=false;
+		console.log("ungerade");
+	}
+	
+	// convert linspaces to vectors:
+	var converted_args = [];
+	for(var i =  0;i<all_input_vectors_arg_length;i++){
+		var vec_str = arguments[i];
+		if(typeof(arguments[i])=="object"){ // if: plot('x^2',linspace(-1,2,0.4)) // as linspace comes in as object
+			vec_str="["+arguments[i].toString()+"]";
+		}
+		converted_args[i]=convertString_TO_Vector(vec_str);
+	}
+	
+	for(var i =  0;i<all_input_vectors_arg_length;i++){
+		if((typeof(arguments[i])=="string") && !(arguments[i].includes("[") && (i>0) ) ){ // handle as expression "x*x"
+		console.log("inside")
+		converted_args[i] = eval_expression(arguments[i].toString(), converted_args[i-1]); 
+		}
+	}
+	
+	console.log(converted_args);
+	
+	var data=[];
+	var index =0;
+	for(var j = 0;j<(all_input_vectors_arg_length);j=j+2){
+		var xaxis='x'+(index+1).toString();
+		var yaxis='y'+(index+1).toString();
+		if(in_one){
+		data[index]=create_plot_trace(converted_args[j], converted_args[j+1]);
+		}
+		else{
+		data[index]=create_plot_trace(converted_args[j], converted_args[j+1],xaxis,yaxis);
+		}
+		index=index+1;
+	}
+	console.log("data:");
+	console.log(data);
+	
+	if(in_one){
+		Plotly.newPlot("plot1", data);
+	}
+	else{
+		if(converted_args.length==4){
+			var layout = {
+					  xaxis: {domain: [0, 0.45]},
+					  yaxis2: {anchor: 'x2'},
+					  xaxis2: {domain: [0.55, 1]}
+					};	
+		}
+		else if(converted_args.length==6){
+			var layout = {
+					  xaxis: {domain: [0, 0.45]},
+					  yaxis: {domain: [0, 0.45]},
+					  xaxis3: {
+					    domain: [0, 0.45],
+					    anchor: 'y3'
+					  },
+					  xaxis2: {domain: [0.55, 1]},
+					  yaxis2: {
+					    domain: [0, 0.45],
+					    anchor: 'x2'
+					  },
+					  yaxis3: {domain: [0.55, 1]},
+					};
+		}
+		else if(converted_args.length==8){
+			var layout = {
+					  xaxis: {domain: [0, 0.45]},
+					  yaxis: {domain: [0, 0.45]},
+					  xaxis4: {
+					    domain: [0.55, 1],
+					    anchor: 'y4'
+					  },
+					  xaxis3: {
+					    domain: [0, 0.45],
+					    anchor: 'y3'
+					  },
+					  xaxis2: {domain: [0.55, 1]},
+					  yaxis2: {
+					    domain: [0, 0.45],
+					    anchor: 'x2'
+					  },
+					  yaxis3: {domain: [0.55, 1]},
+					  yaxis4: {
+					    domain: [0.55, 1],
+					    anchor: 'x4'
+					  }
+					};
+		}
+
+		Plotly.newPlot("plot1", data, layout);
+	}
+
+	return 0;
+}
+
+function create_plot_trace(vec_x1, vec_y1, xaxis_='x1',yaxis_='y1',type_='scatter', name_=''){
+	var trace = {
+			  x: vec_x1, 
+			  y: vec_y1, 
+			  xaxis: xaxis_,
+			  yaxis: yaxis_,
+			  type: type_,
+			  name: name_,
+			};
+	return trace;
+}
+
+
 // e.g. [-5,-4.9,-4.800000000000001,-4.700000000000001] -> array of numbers.
 function convertString_TO_Vector(input_str){
 	input_str = input_str.substring(1,input_str.length -1);
@@ -61,25 +293,97 @@ function convertString_TO_Vector(input_str){
 	return result;
 }
 
-function linspace(start, end, stepsize){
-	res =""
-	for (i=start;i<=end+stepsize; i=i+stepsize){
-		res=res+i.toString()+","
+function linspace(start, end, stepsize,factor=3){
+	res ="";
+	for (var i=start;i<=end; i=i+stepsize){
+		var number = Math.round(i * Math.pow(10, factor))/ (Math.pow(10, factor));
+		res=res+number.toString()+","
 	}
 	res = res.substring(0, res.length - 1);
 	res="["+res+"]"
 	return res;
 }
 
-// as variable x
-function eval_expression(expression, x_vector, variable="x", rounding_factor = 2){
+// x as variable in expression no i ! 
+function eval_expression(expression, x_vector, variable="x", rounding_factor = 3){
+	if(typeof(x_vector) == "string"){
+		x_vector = convertString_TO_Vector(x_vector);
+	}
+
 	var res = [];
 	for(var i=0;i<x_vector.length;i++){
-	tmp = expression.replaceAll(variable, "("+x_vector[i]+")");
-	tmp = Algebrite.run(tmp).toString();
-	res.push(Algebrite.float(tmp).toString());
+		tmp = expression.replaceAll(variable, "("+x_vector[i]+")");
+		tmp = Algebrite.run(tmp).toString();
+		res.push(Algebrite.float(tmp).toString());
 	}
 	return roundArray(res, rounding_factor);
+}
+
+//x as variable in expression no i ! 
+function eval_expression_imag(expression, x_vector, variable="x", rounding_factor = 3){
+	if(typeof(x_vector) == "string"){
+		x_vector = convertString_TO_Vector(x_vector);
+	}
+	
+	// check that no division through zero!!!
+//	var denominator = Algebrite.denominator(real_).toString();
+//	console.log(denominator);
+//	var real_roots = Algebrite.roots(denominator).toString();
+	
+	var real = [];
+	var imag = [];
+	for(var i=0;i<x_vector.length;i++){
+		var tmp = expression.replaceAll(variable, "*("+x_vector[i]+")");
+		real[i]=Algebrite.float((Algebrite.real(tmp).toString()));
+		imag[i]=Algebrite.float((Algebrite.imag(tmp).toString()));
+	}
+	return [real, imag];
+}
+
+/** bode([1],[1,1]) -> works
+ * Call like this: bode([1,0],[1,22,2]) = s / s² + 22s +2
+ * @param {array} zaheler - Array [ 1, 0 ]
+ * @param {array} nenner - Array  [ 1, 22, 2 ] 
+ * @returns
+ */
+function bode(zaehler, nenner){
+	var tf_function = convert_array_to_function(zaehler,"p")+"/"+convert_array_to_function(nenner,"p");
+	var tf_function_res = convert_array_to_function(zaehler)+"/"+convert_array_to_function(nenner);
+	
+	Algebrite.run("p=i*w").toString(); // use x to be able to calculate roots!
+	var res = Algebrite.run("simplify("+tf_function+")").toString();
+	
+	var omega = linspace(0.1,2,0.1); // should be higher than 0;
+	omega = "[0.001,0.01,"+omega.substring(1,omega.length-1)+",10,100"+"]";
+	
+	var result = eval_expression_imag(res, omega, "w");
+
+	// plot G(s) with s = iw
+	title_name="G(s)="+Algebrite.run("simplify("+tf_function_res+")").toString()+"="+res+" with s=iw";
+	plot_tf(result[0], result[1], omega, title_=title_name);
+	
+	var amplitude=[];
+	var phase = [];
+	for(var i =0;i<result[0].length;i++){
+		amplitude[i]=Algebrite.float(Algebrite.run("20*log(sqrt( ("+result[0][i]+")^2+("+result[1][i]+")^2 ))").toString()).toString();
+		phase[i]=Algebrite.float(Algebrite.run("180/3.14159*arctan( ("+result[1][i]+")/("+result[0][i]+") )").toString()).toString();
+	}
+	plot_bode(amplitude, phase, omega);
+	//mplot(amplitude, )
+	
+	return ["G", tf_function_res, "", res, "direct_print"];
+}
+
+
+
+function convert_array_to_function(arr, param_name="s"){
+	var zaehler_text ="";
+	var index = arr.length-1;
+	for(var i=0;i<arr.length; i++){
+		zaehler_text=zaehler_text+arr[i].toString()+"*"+param_name+"^"+index.toString()+"+";
+		index--;
+	}
+	return "("+zaehler_text.substring(0,zaehler_text.length-1)+")";
 }
 
 /**
@@ -718,7 +1022,8 @@ function eigenvalue(matrix) {
 			eigenvalues.push(0);
 		}
 	}
-	return eigenvalues;
+	eigenvalues = eigenvalues.toString()+",direct_print";
+	return eigenvalues.split(",")
 }
 
 /**
@@ -1477,7 +1782,8 @@ function getfnclist() {
 			"checkHautusB", "checkHautusS", "setMatValuesym",
 			"arrayToMatrixStringR", "arrayToMatrixStringC", "customReplace",
 			"getfnclist", "getQ_S", "getQ_B", "check_stability", "calcSSys",
-			"plot", "linspace", "get_algebrite_functionlist"];
+			"plot", "linspace", "get_algebrite_functionlist", "mplot",
+			"bode"];
 }
 
 /**
@@ -1560,5 +1866,8 @@ module.exports = {
 	
 	getOpenWebpageHashMap:getOpenWebpageHashMap,
 	plot:plot,
+	mplot:mplot,
 	linspace:linspace,
+	
+	bode:bode,
 }
