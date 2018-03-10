@@ -26189,8 +26189,15 @@ function eval_expression(expression, x_vector, variable="x", rounding_factor = 3
 	return roundArray(res, rounding_factor);
 }
 
-//x as variable in expression no i ! 
-function eval_expression_imag(expression, x_vector, variable="x", rounding_factor = 3){
+
+/**
+ * Do complex expend before with expression! this saves 11 secs!
+ * @param expression
+ * @param x_vector
+ * @param variable
+ * @returns
+ */
+function eval_expression_imag(expression, x_vector, variable="x"){
 	if(typeof(x_vector) == "string"){
 		x_vector = convertString_TO_Vector(x_vector);
 	}
@@ -26202,12 +26209,26 @@ function eval_expression_imag(expression, x_vector, variable="x", rounding_facto
 	
 	var real = [];
 	var imag = [];
+	var tmp ="";
+	var real_val =Algebrite.real(expression).toString();
+	var imag_val = Algebrite.imag(expression).toString();
 	for(var i=0;i<x_vector.length;i++){
-		var tmp = expression.replaceAll(variable, "*("+x_vector[i]+")");
-		real[i]=Algebrite.float((Algebrite.real(tmp).toString()));
-		imag[i]=Algebrite.float((Algebrite.imag(tmp).toString()));
+		real[i]=Algebrite.float(real_val.replaceAll(variable, "("+x_vector[i]+")"));
+		imag[i]=Algebrite.float(imag_val.replaceAll(variable, "("+x_vector[i]+")"));
 	}
 	return [real, imag];
+}
+
+/**
+ * do complex expension manually works better than algebrites imag real function!
+ * @param str "1 / (i z + 1)"
+ * @returns
+ */
+function complex_expand(str){
+	var denom = Algebrite.run("ddd=(denominator("+str+"))").toString();
+	var denom2 = Algebrite.run("ddd*conj(ddd)").toString();
+	var nom = Algebrite.run("numerator("+str+")*conj(ddd)");
+	return Algebrite.run("("+nom+")"+"/"+"("+denom2+")").toString();
 }
 
 /** bode([1],[1,1]) -> works
@@ -26220,14 +26241,15 @@ function bode(zaehler, nenner){
 	var tf_function = convert_array_to_function(zaehler,"p")+"/"+convert_array_to_function(nenner,"p");
 	var tf_function_res = convert_array_to_function(zaehler)+"/"+convert_array_to_function(nenner);
 	
-	Algebrite.run("p=i*w").toString(); // use x to be able to calculate roots!
+	Algebrite.run("p=i*z").toString(); // use x to be able to calculate roots!
 	var res = Algebrite.run("simplify("+tf_function+")").toString();
 	
-	var omega = linspace(0.1,2,0.1); // should be higher than 0;
+	var omega = linspace(0.1,5,0.1); // should be higher than 0;
 	omega = "[0.001,0.01,"+omega.substring(1,omega.length-1)+",10,100"+"]";
-	
-	var result = eval_expression_imag(res, omega, "w");
 
+	var result = eval_expression_imag(complex_expand(res), omega, "z");
+
+	
 	// plot G(s) with s = iw
 	title_name="G(s)="+Algebrite.run("simplify("+tf_function_res+")").toString()+"="+res+" with s=iw";
 	plot_tf(result[0], result[1], omega, title_=title_name);
