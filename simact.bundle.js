@@ -25893,24 +25893,37 @@ var numeric = require('./numeric');
  * @param {string} expression - "sin(x)"
  * @param {string} div_name  - name to be ploted in
  */
-function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expression, xname_="x", yname_="y"){
+function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expression, xname_="x",
+		yname_="y", variable_="x", hold_=false, reversed_=false){
 	if(typeof(x1)=="object"){ // if: plot('x^2',linspace(-1,2,0.4)) // as linspace comes in as object
 		x1="["+x1.toString()+"]";
 	}
-	
+	var y1 = 0;
 	x1=convertString_TO_Vector(x1);
 	if(typeof(expression)=="string"){
-	y1=eval_expression(expression, x1);
+	y1=eval_expression(expression, x1, variable_);
 	}
 	else{ // expression is the result vector!
 		y1=convertString_TO_Vector(expression);
 	}
-			var trace1 = {
-			  x: x1, 
-			  y: y1, 
-			  type: 'scatter',
-			  name: expression
-			};
+	
+	if(!reversed_){
+		var trace1 = {
+				  x: x1, 
+				  y: y1, 
+				  type: 'scatter',
+				  name: expression
+				};
+	}
+	else{
+		var trace1 = {
+				  x: y1, 
+				  y: x1, 
+				  type: 'scatter',
+				  name: expression
+				};	
+	}
+
 			var data = [trace1];
 			var layout = {
 //					  autosize: false,
@@ -25924,9 +25937,64 @@ function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expr
 						  title: yname_
 					  }
 			}
-	Plotly.newPlot(div_name, data, layout);
+	if(!hold_){
+		Plotly.newPlot(div_name, data, layout);
+	}
+	else{
+		Plotly.addTraces(div_name, data);
+	}
+
 	return 0;
 }
+
+/**
+ * Plot single marked points used e.g. for poles zeros of WOK
+ * @param x_vec
+ * @param y_vec
+ * @param {int} sym_num_ - 203 = cross, 100=circle see: https://plot.ly/javascript/reference/
+ * @param title_
+ * @param div_name
+ * @param name_
+ * @param hold_
+ * @returns
+ */
+function plot_points(x_vec, y_vec, sym_num_=203,  name_="poles",  hold_=false, title_="points", div_name="plot1"){
+	if(y_vec==0){ // if y_vec = 0 then add it to a vec containing only zeros.
+		var tmp=[];
+		for(var p=0;p<x_vec.length;p++){
+			tmp[p]=0;
+		}
+		y_vec=tmp;
+	}
+
+	var trace1 = {
+			  x: x_vec,
+			  y: y_vec,
+			  mode: 'markers',
+			  marker: {'color': 'black', 'symbol': sym_num_, 'size': 10},
+			  name: name_
+			};
+			var data = [trace1];
+			var layout = {
+					  title: title_,
+					  xaxis: {
+						  title: "x"
+					  },
+					  yaxis: {
+						  title: "y"
+					  }
+			}
+	
+	if(!hold_){
+		Plotly.newPlot(div_name, data, layout);
+	}
+	else{
+		Plotly.addTraces(div_name, data);
+	}
+
+	return 0;
+}
+
 
 /**
  * used for bode plotting btw. for plotting a transfere function!
@@ -25937,9 +26005,9 @@ function plot(expression, x1=linspace(-5, 5, 0.1), div_name="plot1", title_=expr
  * @param xname_
  * @param yname_
  * @param omega_value "[0,2,4,6,8,10,12,14,16,18,20,2210000]"
- * @returns
+ * @returns {int} - 0
  */
-function plot_tf(x_vec, y_vec,omega_value, title="z=x+iy", div_name="plot1", name_="G(s)", xname_="real, x", yname_="imag, iw"){
+function plot_tf(x_vec, y_vec, omega_value, title="z=x+iy", div_name="plot1", name_="G(s)", xname_="real, x", yname_="imag, iw"){
 	omega_value = omega_value.substring(1,omega_value.length-1);
 	omega_value =omega_value.split(",");
 	for(var i = 0;i<x_vec.length;i++){
@@ -25979,7 +26047,7 @@ function plot_tf(x_vec, y_vec,omega_value, title="z=x+iy", div_name="plot1", nam
  * @param amplitude as  Array [ "0.0", "-1.10715", "-1.32582", "-1.40565", "-1.44644", "-1.47113", "-1.48766", "-1.49949", "-1.50838", "-1.5153", … ]
  * @param phase  as Array [ "0.0", "-1.10715", "-1.32582", "-1.40565", "-1.44644", "-1.47113", "-1.48766", "-1.49949", "-1.50838", "-1.5153", … ]
  * @param omega_str
- * @returns
+ * @returns {0} - A plot is drawn
  */
 function plot_bode(amplitude, phase, omega_str, yname1_="Magnitude (dB)", yname2_ = "Phase(deg)", div_1 ="plot2", div_2 = "plot3"){
 	omega_str = omega_str.substring(1, omega_str.length-1);
@@ -26026,13 +26094,14 @@ function plot_bode(amplitude, phase, omega_str, yname1_="Magnitude (dB)", yname2
 			};
 	Plotly.newPlot(div_1, data, layout);
 	//Plotly.newPlot(div_2, data2, layout);
+	return 0;
 }
 
 /**
  * Wenn ungerade anzahl dann in subplots!
  * @param x1_vec
  * @param y1_vec
- * @returns
+ * @returns {0} - A plot is drawn
  */
 function mplot(x1_vec, y1_vec/*, param="in_one"*/){
 	var all_input_vectors_arg_length =0;
@@ -26175,6 +26244,7 @@ function linspace(start, end, stepsize,factor=3){
 }
 
 // x as variable in expression no i ! 
+// ONLY REAL PART IS PLOTTET!
 function eval_expression(expression, x_vector, variable="x", rounding_factor = 3){
 	if(typeof(x_vector) == "string"){
 		x_vector = convertString_TO_Vector(x_vector);
@@ -26184,7 +26254,7 @@ function eval_expression(expression, x_vector, variable="x", rounding_factor = 3
 	for(var i=0;i<x_vector.length;i++){
 		tmp = expression.replaceAll(variable, "("+x_vector[i]+")");
 		tmp = Algebrite.run(tmp).toString();
-		res.push(Algebrite.float(tmp).toString());
+		res.push(Algebrite.float("real("+tmp+")").toString());
 	}
 	return roundArray(res, rounding_factor);
 }
@@ -26195,7 +26265,7 @@ function eval_expression(expression, x_vector, variable="x", rounding_factor = 3
  * @param expression
  * @param x_vector
  * @param variable
- * @returns
+ * @returns {array} - [real_part, img_part]
  */
 function eval_expression_imag(expression, x_vector, variable="x"){
 	if(typeof(x_vector) == "string"){
@@ -26222,7 +26292,7 @@ function eval_expression_imag(expression, x_vector, variable="x"){
 /**
  * do complex expension manually works better than algebrites imag real function!
  * @param str "1 / (i z + 1)"
- * @returns
+ * @returns {string} - Algebrite string of complex expension of a fraction
  */
 function complex_expand(str){
 	var denom = Algebrite.run("ddd=(denominator("+str+"))").toString();
@@ -26231,11 +26301,11 @@ function complex_expand(str){
 	return Algebrite.run("("+nom+")"+"/"+"("+denom2+")").toString();
 }
 
-/** bode([1],[1,1]) -> works
+/** bode([1],[1,1]) -> works should take around 2.68 sec
  * Call like this: bode([1,0],[1,22,2]) = s / s² + 22s +2
  * @param {array} zaheler - Array [ 1, 0 ]
  * @param {array} nenner - Array  [ 1, 22, 2 ] 
- * @returns
+ * @returns {0} - A plot is drawn
  */
 function bode(zaehler, nenner){
 	var tf_function = convert_array_to_function(zaehler,"p")+"/"+convert_array_to_function(nenner,"p");
@@ -26249,7 +26319,6 @@ function bode(zaehler, nenner){
 
 	var result = eval_expression_imag(complex_expand(res), omega, "z");
 
-	
 	// plot G(s) with s = iw
 	title_name="G(s)="+Algebrite.run("simplify("+tf_function_res+")").toString()+"="+res+" with s=iw";
 	plot_tf(result[0], result[1], omega, title_=title_name);
@@ -26261,9 +26330,78 @@ function bode(zaehler, nenner){
 		phase[i]=Algebrite.float(Algebrite.run("180/3.14159*arctan( ("+result[1][i]+")/("+result[0][i]+") )").toString()).toString();
 	}
 	plot_bode(amplitude, phase, omega);
-	//mplot(amplitude, )
 	
 	return ["G", tf_function_res, "", res, "direct_print"];
+}
+
+/**
+ * Plot the Wurzelortskurve of a given open loop
+ * transfere function
+ * First it is done: 	//Re {N0(s)} · Im {Z0(s)} − Re {Z0(s)} · Im {N0(s)}= 0
+ * Second: TODO calculate k of each datapoint!
+ * CAUTION Currently just gives the analytical solution not the actual WOK!
+ * -> handle this by first selecting the range of the x axis that is
+ * on the wok!
+ * Try this example: Kr*(s + 4)(s + 6)/(s(s+2))  = s^2+10s+24 / s^2 +2s
+ * by wok([1,10,24],[1,2,0])
+ * CAUTION this example takes up to 33 sec.
+ * @param {array} zaehler_open_loop - Array [ 1, 10, 24 ]
+ * @param {array} nenner_open_loop - Array [1,2,0]
+ * @returns {string} - 0 (the wok plot)
+ */
+function wok(zaehler_open_loop, nenner_open_loop){
+	var Zo =  "("+convert_array_to_function(zaehler_open_loop,"s")+")";
+	var No = 	convert_array_to_function(nenner_open_loop,"s");
+	
+	var poles = Algebrite.roots(No).toString();
+	poles = poles.substring(1,poles.length-1);
+	poles = poles.split(",");
+	
+	var zeros = Algebrite.roots(Zo).toString();
+	zeros = zeros.substring(1,zeros.length-1);
+	zeros = zeros.split(",");
+	
+	plot_points(poles,0);
+	plot_points(zeros,0,100,"zeros",true);
+	
+	// plot real axis part:
+	var pols_and_zeros = zeros.concat(poles);
+	pols_and_zeros=convertString_TO_Vector(pols_and_zeros);
+	console.log(pols_and_zeros);
+	console.log(pols_and_zeros.sort());
+	//console.log(pols_and_zeros.sort().reverse());
+	
+//	Algebrite.run("s=x+i*y").toString();
+//	Algebrite.run("Zo="+"("+Zo+")");
+//	Algebrite.run("No="+"("+No+")");
+//	
+//	Algebrite.run("fff=real(No)*imag(Zo)");
+//	Algebrite.run("sss=real(Zo)*imag(No)");
+//	Algebrite.run("anal=simplify(fff-sss)");
+//
+//	var roots = (Algebrite.roots("anal").toString()); // "[-3 - 1/2 (12 - 4 y^2)^(1/2),-3 + 1/2 (12 - 4 y^2)^(1/2)]";
+//	roots = roots.replace("[","");
+//	roots = roots.replace("]","");
+//	roots = roots.split(",");
+//	
+//	// can this be sped up? by using the symmetric aspects?
+//	// should this have alwayse 2 roots?
+//	if(roots.length==2){
+//		plot(roots[0], linspace(-5, 5, 0.5), "plot1", "Wok analytical Solution", "x", "y", "y", true, true);
+//		plot(roots[1], linspace(-5, 5, 0.5), "plot1", "Wok analytical Solution", "x", "y", "y", true, true);
+//	}
+//	else if (roots.length == 1){
+//		plot(roots[0], linspace(-5, 5, 0.1), "plot1", "Wok analytical Solution", "x", "y", "y", false, true);
+//	}
+//	else{
+//		console.log("Sry "+roots+" has more than 2 solutions... is to hard to solve");
+//	}
+	
+	// k = abs(No)/abs(Zo)
+
+	// calculate vzp and other attributes of the wok!
+	
+    return 0;
 }
 
 
@@ -26279,7 +26417,8 @@ function convert_array_to_function(arr, param_name="s"){
 }
 
 /**
- * Open help page in new page
+ * Open a website in a new window! 
+ * @returns {map} key value - command -> wwww.websitename.de
  */
 function getOpenWebpageHashMap(){
 	var map = {};
@@ -27659,6 +27798,77 @@ function timesolstates(A,B,x_start){
 	return results;
 }
 
+/// Animations:
+/**
+ * 2D Animation of Points. xvector1 and yvector 1 is plottet then it is waited duration_ 
+ * and then the next vector pair is plottet.
+ * @param {2d-array} x_mat - [[1,1],[1,1]]
+ * @param {2d-array} y_mat - [[1,1],[1,1]]
+ * @param {int} duration_ - time in ms e.g: 100
+ * @param {string} div_ - the div to plot the animation to
+ * @param {int} x_left_range_ - -40 (default)
+ * @param {int} x_right_range_  +40 (default)
+ * @param {int} y_down_range_   -40 (default)
+ * @param {int} y_up_range_     +40 (default)
+ * @returns {int} - 0
+ */
+function animate(x_mat, y_mat, duration_=20, div_='plot1', x_left_range_=-40, x_right_range_=40, y_down_range_=-40, y_up_range_=40){
+	console.log("inside animation");
+	x_mat = [];
+	y_mat = [];
+	var n = 0;
+	
+	for(var i =0;i<1000;i=i+1){
+		x_mat[i] = [1*20*i*0.01+1, 2*2*i*0.1, 3*i*0.1,i*0.1];
+		y_mat[i] = [0,1,2,-10];
+	}
+
+	// plot start config:
+	Plotly.plot(div_, [{
+	  x: x_mat[0],
+	  y: y_mat[0],
+	  mode: 'markers'
+	}], 
+	{
+	  xaxis: {range: [x_left_range_, x_right_range_]},
+	  yaxis: {range: [y_down_range_, y_up_range_]}
+	}
+	)
+
+	function compute () {
+		n=n+1;
+		x=x_mat[n];
+		y=y_mat[n];
+	}
+
+	function update () { // plot x, y vector!
+	  compute();
+
+	  Plotly.animate(div_, {
+	    data: [{x: x, y: y}]
+	  }, {
+	    transition: {
+	      duration: 0
+	    },
+	    frame: {
+	      duration: duration_, // 1 sec!
+	      redraw: false // slows down !!!
+	    }
+	  });
+		if(n==x_mat.length){
+			console.log("animation finished after "+(duration_*n)+" ms")
+			return 0;
+		}
+	  requestAnimationFrame(update);
+	}
+
+	// this is only called once!
+	requestAnimationFrame(update);
+	return 0;
+}
+
+
+
 /**
  * getfnclist of simact functions!
  * 
@@ -27675,8 +27885,9 @@ function getfnclist() {
 			"arrayToMatrixStringR", "arrayToMatrixStringC", "customReplace",
 			"getfnclist", "getQ_S", "getQ_B", "check_stability", "calcSSys",
 			"plot", "linspace", "get_algebrite_functionlist", "mplot",
-			"bode"];
+			"bode", "animate", "wok"];
 }
+
 
 /**
  * get_algebrite_functionlist
@@ -27762,6 +27973,9 @@ module.exports = {
 	linspace:linspace,
 	
 	bode:bode,
+	wok:wok,
+	
+	animate: animate,
 }
 
 },{"./algebrite":1,"./numeric":3}]},{},[4])(4)
